@@ -1,0 +1,13 @@
+curl -d '{
+  "userName": "alex.plywood@tuts.com",
+  "password": "secret",
+  "confirmPassword": "secret",
+  "organisation": "google"
+}' -H 'Content-Type: application/json' http://localhost:3000/user-login
+
+curl -d '{
+  "userName": "alex.plywood@tuts.com",
+  "password": "secret",
+  "confirmPassword": "secret",
+  "organisation": "google"
+}' -H 'Content-Type: application/json' http://localhost:3000/user-registration
