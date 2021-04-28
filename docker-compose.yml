@@ -1,5 +1,10 @@
 version: "3"
 services:
+  redis:
+    image: redis
+    container_name: cache
+    expose:
+      - 6379
   app:
     container_name: nodebackend
     depends_on:
@@ -7,21 +12,16 @@ services:
     build: ./server
     volumes:
       - ./server/src/:/usr/src/app/src
-    ports: 
-    - "3000:3000"
-    networks:
-    - redis
-
-  redis:
-    container_name: redis-container
-    image: "redis:latest"
+    links:
+      - redis
     ports:
-    - "6379:6379"
-    volumes:
-      - ./data:/data
-    networks:
-    - redis
-    command: ['--requirepass "secret"']
-networks:
-  redis:
-    driver: bridge
+      - "3000:3000"
+    environment:
+      - REDIS_URL=redis://cache
+      - NODE_ENV=development
+      - PORT=3000
+    command:
+      sh -c 'npm i && node server.js'
+
+
+
