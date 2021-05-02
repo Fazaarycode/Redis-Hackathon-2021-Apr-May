@@ -3,54 +3,12 @@ const axios = require("axios");
 const app = express();
 const { login, registration } = require('./routes/index');
 const redisClient = require('./redisClient/connection');
+const SightingData = require('./routes/search/searchFunctions') 
+const load = require('./routes/search/loadData');
+let sightingData = new SightingData()
+sightingData.init()
 
-let redsearch  = require('./redredisearch');
-
-// const   
-//   argv      = require('yargs')                                    // command line handling
-//               .demand('connection')                               // require the 'connection' argument
-//               .demand('query')                                    // the query we'll run against the indexed values
-//               .argv;
-
-  
-redsearch.setClient(redisClient.client);
-
-
-redsearch.confirmModule(function(err){ // make sure the Redis install has the RediSearch module
-  if (err) throw err; // throw an error if not
-  console.log('RediSearch found.');
- });
-
- redsearch.createSearch('pets', {}, function(err,search) {
-
-  var strs = [];
-  strs.push('Manny is a cat');
-  strs.push('Luna is a cat');
-  strs.push('Tobi is a ferret');
-  strs.push('Loki is a ferret');
-  strs.push('Jane is a ferret');
-  strs.push('Jane is funny ferret');
-
-  // index them
-
-  strs.forEach(function(str, i){
-    search.index(str, i);
-  });
-
-  // query
-
-  search.query('funny ferry').end(function(err, ids){
-    if (err) throw err;
-    var res = ids.map(function(i){ return strs[i]; });
-    console.log(res);
-    res.forEach(function(str){
-      console.log('    - %s', str);
-    });
-    console.log();
-    process.exit();
-  });
-});
-
+load();
 
 app.use(express.json())
 
@@ -58,6 +16,11 @@ app.use(express.json())
 app.use(login);
 
 app.use(registration);
+
+app.get('/sighting/:id', async (req, res) => {
+  console.log('Here!')
+  res.send(await sightingData.findById(req.params.id))
+})
 
 app.get('/store/:key', async (req, res) => {
     const { key } = req.params;
@@ -71,6 +34,14 @@ app.get('/:key', async (req, res) => {
     const rawData = await redisClient.getAsync(key);
     return res.json(JSON.parse(rawData));
 });
+
+app.get('/sightings/state/:state/containing/:text', async (req, res) => {
+  res.send(await sightingData.findByStateContaining(req.params.state, req.params.text))
+})
+
+app.get('/sightings/state/:state', async (req, res) => {
+  res.send(await sightingData.findByState(req.params.state))
+})
 
 app.get('/', (req, res) => {
     return res.send('Hello world');
