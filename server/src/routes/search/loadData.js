@@ -18,10 +18,8 @@ fs.createReadStream('datasource/bfro_reports_geocoded.csv')
     title = title.replace(/^Report \d*: /, '')
     county = county.replace(/ County$/, '')
     let location = (longitude && latitude) ? `${longitude},${latitude}` : ''
-
     let key = `sighting:${id}`
     let values = { id, title, date, observed, classification, county, state, location, location_details }
-
     p.hset(key, values)
   })
   .on('end', () => {

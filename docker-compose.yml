@@ -11,7 +11,7 @@ services:
       - redis
     build: ./server
     volumes:
-      - ./server/src/:/usr/src/app/src
+      - ./server/src/:/usr/workspace/application/src
     links:
       - redis
     ports:

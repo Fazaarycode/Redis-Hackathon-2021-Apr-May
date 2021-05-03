@@ -5,17 +5,20 @@ const { login, registration } = require('./routes/index');
 const redisClient = require('./redisClient/connection');
 const SightingData = require('./routes/search/searchFunctions') 
 const load = require('./routes/search/loadData');
+const uploader = require('./fileUploader/uploader');
 let sightingData = new SightingData()
 sightingData.init()
 
-load();
 
-app.use(express.json())
+
+app.use(express.json()) // Body-parser
 
 // Routes
 app.use(login);
 
 app.use(registration);
+
+app.use(uploader);
 
 app.get('/sighting/:id', async (req, res) => {
   console.log('Here!')
@@ -47,8 +50,40 @@ app.get('/', (req, res) => {
     return res.send('Hello world');
 });
 
+// Here is where we load data.
+
+app.get('/load', (req,res) => {
+  // if(req.query.dataset === '') {
+    load();
+  // }
+})
+
+// -------------
+
+
+  // ---------------
+
 const SERVERPORT = process.env.PORT || 3000;
 
 app.listen(SERVERPORT, () => {
     console.log("🟢 Node server started 🟢");
 });
+
+
+// Whats Pending?
+/**
+ * Dynamic construct data as per data source selected.
+ *  - Which includes Search Index
+ *  - Create endpoint for Auto-complete
+ *  - Create endpoints for search
+ *  - Use multer to upload DataCSV
+ *  - Handle Tenant based search for different data sources
+ *  - Use Frontend
+ *  - Fix code structure
+ */
+
+
+// How
+/**
+ * Use csv-parser to extract headers
+ */
