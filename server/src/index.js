@@ -6,6 +6,9 @@ const redisClient = require('./redisClient/connection');
 const SightingData = require('./routes/search/searchFunctions') 
 const load = require('./routes/search/loadData');
 const uploader = require('./fileUploader/uploader');
+const autocompleteSetter = require('./routes/search/autocompleteSetter')
+const autocompleteResults = require('./routes/search/autocompleteResults')
+const indexBuilder = require('./searchIndexBuilder/indexBuilder');
 let sightingData = new SightingData()
 sightingData.init()
 
@@ -19,6 +22,14 @@ app.use(login);
 app.use(registration);
 
 app.use(uploader);
+
+app.use(autocompleteSetter);
+
+app.use(autocompleteResults);
+
+// app.use(indexBuilder)
+indexBuilder();
+
 
 app.get('/sighting/:id', async (req, res) => {
   console.log('Here!')
@@ -50,6 +61,8 @@ app.get('/', (req, res) => {
     return res.send('Hello world');
 });
 
+// load();
+
 // Here is where we load data.
 
 app.get('/load', (req,res) => {
@@ -73,10 +86,10 @@ app.listen(SERVERPORT, () => {
 // Whats Pending?
 /**
  * Dynamic construct data as per data source selected.
- *  - Which includes Search Index
- *  - Create endpoint for Auto-complete
- *  - Create endpoints for search
- *  - Use multer to upload DataCSV
+ *  - Which includes Search Index (✅) - For Single dataset - Not dynamic yet.
+ *  - Create endpoint for Auto-complete  (✅)
+ *  - Create endpoints for search (✅)
+ *  - Use multer to upload DataCSV (✅)
  *  - Handle Tenant based search for different data sources
  *  - Use Frontend
  *  - Fix code structure

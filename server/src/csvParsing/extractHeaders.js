@@ -4,16 +4,14 @@
 const csv = require('csv-parser')
 const fs = require('fs')
 
-module.exports = () => {
-
-    fs.createReadStream('datasource/bfro_reports_geocoded.csv')
+module.exports = (fileName) => {
+    return new Promise((resolve, reject) => {
+        fs.createReadStream(`datasource/${fileName}`)
         .pipe(csv())
         .on('headers', (headers) => {
-            console.log(`First header: ${headers}`)
-            return headers;
-            /**
-             * observed,location_details,county,state,title,latitude,longitude,date,number,classification,geohash,temperature_high,temperature_mid,temperature_low,dew_point,humidity,cloud_cover,moon_phase,precip_intensity,precip_probability,precip_type,pressure,summary,uv_index,visibility,wind_bearing,wind_speed
-             */
+            resolve(headers);
         })
+        .on('error', err => reject(err))
+    })
 
 }

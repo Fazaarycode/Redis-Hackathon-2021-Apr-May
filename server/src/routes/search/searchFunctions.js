@@ -14,21 +14,39 @@ class SightingsData {
     if (indices.includes(INDEX)) {
       await this.connection.call('FT.DROPINDEX', INDEX)
     }
+    let pref = 'sighting:'
 
-    await this.connection.call(
-      'FT.CREATE', INDEX,
-      'ON', 'hash',
-      'PREFIX', 1, 'sighting:',
-      'SCHEMA',
-      'title', 'TEXT',
-      'observed', 'TEXT',
-      'location_details', 'TEXT',
-      'location', 'GEO',
-      'county', 'TAG',
-      'state', 'TAG'
-    )
+    // this.setIndices(str);
+    //   let ss = [
+    //   'FT.CREATE','sightings:index',
+    //   'ON',               'hash',
+    //   'PREFIX',           1,
+    //   'sighting:',        'SCHEMA',
+    //   'title',            'TEXT',
+    //   'observed',         'TEXT',
+    //   'location_details', 'TEXT',
+    //   'location',         'GEO',
+    //   'county',           'TAG',
+    //   'state',            'TAG'  
+    // ]
+
+  //   await this.connection.call(
+  //  Object.values({...ss.map(s=>JSON.stringify(s))})
+  //     )
+    await this.connection.call('FT.CREATE','sightings:index','ON','hash','PREFIX',1,'sighting:','SCHEMA')
     console.log('done init')
     console.log(await this.findById(2))
+  }
+
+  async setIndices(arr) {
+    try {
+      return Promise.all(
+        await arr.map((val,idx) => {
+          console.log(val)
+          return this.connection.call(val.toString())
+        })
+      )
+    } catch(err) {console.log('ERRRR ', err)}
   }
 
   async findById(id) {
