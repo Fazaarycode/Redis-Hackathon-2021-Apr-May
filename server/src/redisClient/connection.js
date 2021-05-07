@@ -1,7 +1,5 @@
 const Redis = require("ioredis");
-// const redis = require("redis");
 const {promisify} = require('util');
-// const client = redis.createClient(process.env.REDIS_URL);
 const client = new Redis('redis://cache:6379');
 
 module.exports = {

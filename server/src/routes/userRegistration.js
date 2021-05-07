@@ -1,3 +1,4 @@
+const Redis = require("ioredis");
 var express = require('express');
 var router = express.Router();
 const { connectToRedis } = require('../redisClient/connection');
@@ -5,11 +6,12 @@ const { sanityCheckUserRegistration } = require('../validators/userValidation')
 // User Registration
 module.exports = router.post('/user-registration', function (req, res) {
     try {
+        let client = new Redis('redis://cache:6379')
         // Sanity Check
         sanityCheckUserRegistration(req.body)
         // Check if User exists in Redis Cache.
         let { userName } = req.body;
-        connectToRedis().get(userName, async (err, user) => {
+        client.get(userName, async (err, user) => {
             if (err) throw err;
             if (user) {
                 res.status(200).send({
@@ -18,7 +20,7 @@ module.exports = router.post('/user-registration', function (req, res) {
                 });
             }
             else {
-                connectToRedis().setex(userName, 60000, JSON.stringify(req.body));
+                client.hset(userName, 60000, JSON.stringify(req.body));
                 res.status(200).send({
                     userData: req.body,
                     message: "cache miss"
