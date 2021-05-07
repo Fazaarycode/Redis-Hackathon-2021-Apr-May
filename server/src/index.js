@@ -1,5 +1,6 @@
 const express = require("express");
 const axios = require("axios");
+var cookieparser = require("cookie-parser");
 const app = express();
 const { login, registration } = require('./routes/index');
 const redisClient = require('./redisClient/connection');
@@ -10,11 +11,14 @@ const autocompleteSetter = require('./routes/search/autocompleteSetter')
 const autocompleteResults = require('./routes/search/autocompleteResults')
 const indexBuilder = require('./searchIndexBuilder/indexBuilder');
 let sightingData = new SightingData()
+
 sightingData.init()
 
 
 
 app.use(express.json()) // Body-parser
+
+app.use(cookieparser())
 
 // Routes
 app.use(login);
@@ -30,6 +34,7 @@ app.use(autocompleteResults);
 // app.use(indexBuilder)
 indexBuilder();
 
+// signJWT();
 
 app.get('/sighting/:id', async (req, res) => {
   console.log('Here!')

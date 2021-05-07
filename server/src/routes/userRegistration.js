@@ -1,12 +1,12 @@
 const Redis = require("ioredis");
 var express = require('express');
 var router = express.Router();
-const { connectToRedis } = require('../redisClient/connection');
+const { client } = require('../redisClient/connection');
 const { sanityCheckUserRegistration } = require('../validators/userValidation')
 // User Registration
 module.exports = router.post('/user-registration', function (req, res) {
     try {
-        let client = new Redis('redis://cache:6379')
+        // let client = new Redis('redis://cache:6379')
         // Sanity Check
         sanityCheckUserRegistration(req.body)
         // Check if User exists in Redis Cache.
@@ -20,7 +20,7 @@ module.exports = router.post('/user-registration', function (req, res) {
                 });
             }
             else {
-                client.hset(userName, 60000, JSON.stringify(req.body));
+                client.set(userName, JSON.stringify(req.body));
                 res.status(200).send({
                     userData: req.body,
                     message: "cache miss"
@@ -49,3 +49,4 @@ module.exports = router.post('/user-registration', function (req, res) {
 // router.get('/version', (req, res) => {
 //     res.send(`Version found ${new Date().toISOString()}`)
 // })
+

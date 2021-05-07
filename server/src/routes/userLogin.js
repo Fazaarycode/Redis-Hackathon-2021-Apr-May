@@ -1,26 +1,30 @@
 var express = require('express');
 var router = express.Router();
-const { connectToRedis } = require('../redisClient/connection');
+const { client } = require('../redisClient/connection');
 const { sanityCheckLoginDetails } = require('../validators/userValidation')
+let signJWT = require('./auth/jwt/signJWT')
 
 module.exports =  router.post('/user-login', function (req, res) {
         try {
             sanityCheckLoginDetails(req.body);
             let { userName, password } = req.body;
             // Login use case doesn't require us setting us to Redis Cache.
-            connectToRedis().get(userName, async (err, user) => {
+            client.get(userName, async (err, user) => {
                 if (err) throw err;
                 let myUser = JSON.parse(user);
                 if (myUser && myUser.password === password) {
-                    res.status(200).send({
-                        user: myUser,
-                        message: "User exists in cache"
-                    });
-                } else {
+                    let accessToken = await signJWT(myUser);
+                    if(accessToken) {
+                        console.log('Sup, ',accessToken)
+                        res.cookie("jwt", accessToken, {secure: false, httpOnly: false})
+                        res.status(200).send({ userName }) // Other fields such as Name etc.
+                    }
+                } 
+                else {
                     throw new Error('Could not find suitable user');
                 }
             })
         } catch (err) {
             res.status(500).send({ message: err.message });
-        }
+        } 
     });

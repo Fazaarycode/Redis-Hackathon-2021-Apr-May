@@ -4,6 +4,7 @@ var Redis = require('ioredis');
 const csv = require('csv-parser')
 const fs = require('fs')
 var connection = new Redis(process.env.REDIS_URL);
+const {verify} = require('../auth/jwt/verifyJWT');
 /**
  * This file has an endpoint that is used to add WORD-SUGGESTIONS to Redis using FT.SUGGET command.
  * curl http://localhost:3000/auto-complete-setter
@@ -33,7 +34,7 @@ const helper = () => {
     }
 }
 
-module.exports = router.get('/auto-complete-setter', async (req, res) => {
+module.exports = router.get('/auto-complete-setter', verify, async (req, res) => {
     try {
         // Pass in file name to this request to dynamically pick csv file and iterate that.
         // READ CSV, EXECUTE FT.SUGADD
