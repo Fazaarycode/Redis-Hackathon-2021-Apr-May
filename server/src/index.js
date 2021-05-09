@@ -13,7 +13,7 @@ const autocompleteResults = require('./routes/search/autocompleteResults')
 let sightingData = new SightingData()
 sightingData.init()
 
-// load();
+load();
 
 
 app.use(express.json()) // Body-parser

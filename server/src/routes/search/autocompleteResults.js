@@ -17,7 +17,6 @@ let headers = []; // Extracted csv headers
 
 const matchingData = async(keyString, fileNameIndex) => {
     let [count, ...foundMatchingKeys] = await connection.call('FT.SEARCH', `${fileNameIndex}:index`, keyString, 'LIMIT', 0, 100)
-    console.log('COUNT ? ', count)
     let foundKeys = foundMatchingKeys.filter((entry, index) => index % 2 !== 0)
     let allValues = foundKeys.map(eachValues => {
       let keys = eachValues.filter((_, index) => index % 2 === 0)
@@ -29,7 +28,7 @@ const matchingData = async(keyString, fileNameIndex) => {
     })
     return { count, allValues }
 }
-const helper = async (keyString, fileName = 'tmdb_5000_movies.csv') => {
+const helper = async (keyString, fileName) => {
     try {
         let results = []; // Suggestions
         console.log('Previous csv datafile', previousCsvReadFileName);

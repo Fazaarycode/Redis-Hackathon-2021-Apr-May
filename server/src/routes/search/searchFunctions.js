@@ -72,6 +72,7 @@ class SightingsData {
   }
 
   async find(query) {
+    console.log(`Running below query await this.connection.call('FT.SEARCH', ${INDEX}, ${query}, 'LIMIT', 0, 100)` )
     let [count, ...foundKeysAndSightings] = await this.connection.call('FT.SEARCH', INDEX, query, 'LIMIT', 0, 100)
     console.log('count  ??', foundKeysAndSightings)
     let foundSightings = foundKeysAndSightings.filter((entry, index) => index % 2 !== 0)

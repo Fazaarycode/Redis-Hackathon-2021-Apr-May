@@ -8,9 +8,8 @@ console.log(process.env)
 let r = new Redis('redis://cache')
 
  let p = r.pipeline()
- console.log('WHHY NOT ? ')
 
-fs.createReadStream('datasource/bfro_reports_geocoded.csv')
+ fs.createReadStream('datasource/bfro_reports_geocoded.csv')
   .pipe(csv())
   .on('data', data => {
     let { number, title, date, observed, classification, county, state, latitude, longitude, location_details } = data
@@ -21,6 +20,7 @@ fs.createReadStream('datasource/bfro_reports_geocoded.csv')
     let location = (longitude && latitude) ? `${longitude},${latitude}` : ''
     let key = `sighting:${id}`
     let values = { id, title, date, observed, classification, county, state, location, location_details }
+    // console.log(`Command p.hset(${key}, ${values})`)
     p.hset(key, values)
   })
   .on('end', () => {
