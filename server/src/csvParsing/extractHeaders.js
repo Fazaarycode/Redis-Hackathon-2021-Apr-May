@@ -13,5 +13,4 @@ module.exports = (fileName) => {
         })
         .on('error', err => reject(err))
     })
-
 }

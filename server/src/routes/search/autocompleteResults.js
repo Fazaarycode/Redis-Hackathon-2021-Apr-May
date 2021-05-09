@@ -9,15 +9,27 @@
 var express = require('express');
 var router = express.Router();
 var Redis = require('ioredis');
-const csv = require('csv-parser')
-const fs = require('fs')
 var connection = new Redis(process.env.REDIS_URL);
 var extractedHeaders = require('../../csvParsing/extractHeaders')
 
 let previousCsvReadFileName = '';
 let headers = []; // Extracted csv headers
 
-const helper = async (keyString, fileName = 'bfro_reports_geocoded.csv') => {
+const matchingData = async(keyString, fileNameIndex) => {
+    let [count, ...foundMatchingKeys] = await connection.call('FT.SEARCH', `${fileNameIndex}:index`, keyString, 'LIMIT', 0, 100)
+    console.log('COUNT ? ', count)
+    let foundKeys = foundMatchingKeys.filter((entry, index) => index % 2 !== 0)
+    let allValues = foundKeys.map(eachValues => {
+      let keys = eachValues.filter((_, index) => index % 2 === 0)
+      let values = eachValues.filter((_, index) => index % 2 !== 0)
+      return keys.reduce((eachRecord, key, index) => {
+        eachRecord[key] = values[index]
+        return eachRecord
+      }, {})
+    })
+    return { count, allValues }
+}
+const helper = async (keyString, fileName = 'tmdb_5000_movies.csv') => {
     try {
         let results = []; // Suggestions
         console.log('Previous csv datafile', previousCsvReadFileName);
@@ -25,26 +37,28 @@ const helper = async (keyString, fileName = 'bfro_reports_geocoded.csv') => {
             headers = await extractedHeaders(fileName);
             previousCsvReadFileName = fileName;
         }
+        console.log('Key string ', keyString);
         // Time to get data. 
+        let exactMatch = await matchingData(keyString, fileName);
+        console.log('Records found for exact match ', exactMatch)
         await Promise.all((headers || []).map(async header => {
-            // ----- Data entered as follows ---------------------
-            console.log(`FT.SUGADD, ${header}, ${keyString} 1`);
-            // ---------------------------------------------------
+   
             let data = await connection.call('FT.SUGGET', header, keyString);
             let fuzzy = await connection.call('FT.SUGGET', header, keyString);
 
+            // console.log('Current Header ::: ### ' , header)
+            // console.log('Data' , `FT.SUGGET ${header} ${keyString}`)
+            // console.log('fuzzy' , fuzzy)
             if (Array.isArray(data)) {
                 data.length !== 0
                     ? results.push(data, {searchType: 'prefix'})
                     : null
             }
-
             if (Array.isArray(fuzzy)) {
                 fuzzy.length !== 0
                     ? results.push(fuzzy, {searchType: 'fuzzy'})
                     : null
             }
-
         }))
         console.log('All possible auto-correct suggestions: ' , results);
         return results;
@@ -66,3 +80,10 @@ module.exports = router.get('/auto-complete-results', async (req, res) => {
         res.send({ message: `Failed to query due to ${err}` })
     }
 })
+
+
+
+            // console.log('Query String' ,keyString)
+            // ----- Data entered as follows ---------------------
+            // console.log(`FT.SUGADD, ${header}, ${keyString} 1`);
+            // ---------------------------------------------------

@@ -19,7 +19,7 @@ const accessTokenHelper = async (payload) => {
             if (ex) reject(ex);
             let tt = buf.toString('base64');
             console.log('SIGNING TOKEN ' , process.env.JWT_SECRET)
-            token = await jwtr.sign(payload, process.env.JWT_SECRET, { expiresIn: 2000 }); // Seconds 
+            token = await jwtr.sign(payload, process.env.JWT_SECRET, { expiresIn: 864000 }); // Seconds 
             console.log('FF ? ,', token)
             resolve(token);
         });

@@ -25,12 +25,12 @@ This is just a quick and dirty document do get you up and running with this samp
 6. Have fun finding Bigfoot with this handy URLs:
 
         $ curl http://localhost/sighting/1234
-        $ curl http://localhost/sightings/state/Ohio
+        $ curl http://localhost:3000/sightings/state/Ohio
         $ curl http://localhost/sightings/county/Athens/state/Ohio
-        $ curl http://localhost/sightings/containing/walmart
+        $ curl http://localhost:3000/sightings/containing/walmart
         $ curl http://localhost/sightings/near/lat/39.9612/long/-82.9988/within/50/mi
         $ curl http://localhost/sightings/near/lat/39.9612/long/-82.9988/within/50/km
-        $ curl http://localhost/sightings/state/California/containing/river
+        $ curl http://localhost:3000/sightings/state/California/containing/river
 
 Thanks!
 Guy

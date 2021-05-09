@@ -10,11 +10,10 @@ const load = require('./routes/search/loadData');
 const uploader = require('./fileUploader/uploader');
 const autocompleteSetter = require('./routes/search/autocompleteSetter')
 const autocompleteResults = require('./routes/search/autocompleteResults')
-const indexBuilder = require('./searchIndexBuilder/indexBuilder');
 let sightingData = new SightingData()
-
 sightingData.init()
 
+// load();
 
 
 app.use(express.json()) // Body-parser
@@ -28,12 +27,7 @@ app.use(registration);
 
 app.use(uploader);
 
-app.use(autocompleteSetter);
-
 app.use(autocompleteResults);
-
-// app.use(indexBuilder)
-indexBuilder();
 
 // signJWT();
 
@@ -63,24 +57,29 @@ app.get('/sightings/state/:state', async (req, res) => {
   res.send(await sightingData.findByState(req.params.state))
 })
 
+  app.get('/sightings/containing/:text', async (req, res) => {
+    res.send(await sightingData.findContaining(req.params.text))
+  })
+
+// app.get('/load', (req,res) => {
+//   // if(req.query.dataset === '') {
+//     console.log('RUL ')
+//     load();
+//     res.send();
+//   // }
+// })
+
 app.get('/', (req, res) => {
     return res.send('Hello world');
 });
 
-// load();
-
 // Here is where we load data.
 
-app.get('/load', (req,res) => {
-  // if(req.query.dataset === '') {
-    load();
-  // }
-})
+
 
 // -------------
 
-
-  // ---------------
+// ---------------
 
 const SERVERPORT = process.env.PORT || 3000;
 

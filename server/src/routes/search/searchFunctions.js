@@ -3,51 +3,49 @@ const Redis = require('ioredis')
 const INDEX = 'sightings:index'
 const redisClient = require('../../redisClient/connection');
 
+
 class SightingsData {
   async init() {
-    console.log('URL '+ process.env.REDIS_URL)
+
+    console.log('URL ' + process.env.REDIS_URL)
 
     this.connection = new Redis(process.env.REDIS_URL)
 
     let indices = await this.connection.call('FT._LIST')
-
     if (indices.includes(INDEX)) {
       await this.connection.call('FT.DROPINDEX', INDEX)
     }
     let pref = 'sighting:'
 
     // this.setIndices(str);
-    //   let ss = [
-    //   'FT.CREATE','sightings:index',
-    //   'ON',               'hash',
-    //   'PREFIX',           1,
-    //   'sighting:',        'SCHEMA',
-    //   'title',            'TEXT',
-    //   'observed',         'TEXT',
-    //   'location_details', 'TEXT',
-    //   'location',         'GEO',
-    //   'county',           'TAG',
-    //   'state',            'TAG'  
-    // ]
-
-  //   await this.connection.call(
-  //  Object.values({...ss.map(s=>JSON.stringify(s))})
-  //     )
-    await this.connection.call('FT.CREATE','sightings:index','ON','hash','PREFIX',1,'sighting:','SCHEMA')
-    console.log('done init')
+      let ss = [
+      'FT.CREATE','sightings:index',
+      'ON',               'hash',
+      'PREFIX',           1,
+      'sighting:',        'SCHEMA',
+      'title',            'TEXT',
+      'observed',         'TEXT',
+      'location_details', 'TEXT',
+      'location',         'GEO',
+      'county',           'TAG',
+      'state',            'TAG'  
+    ];
+    await this.connection.call(...ss);
+    console.log('don@@e init')
     console.log(await this.findById(2))
   }
 
   async setIndices(arr) {
     try {
       return Promise.all(
-        await arr.map((val,idx) => {
+        await arr.map((val, idx) => {
           console.log(val)
           return this.connection.call(val.toString())
         })
       )
-    } catch(err) {console.log('ERRRR ', err)}
+    } catch (err) { console.log('ERRRR ', err) }
   }
+
 
   async findById(id) {
     return await this.connection.hgetall(`sighting:${id}`)

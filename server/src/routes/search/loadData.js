@@ -8,6 +8,7 @@ console.log(process.env)
 let r = new Redis('redis://cache')
 
  let p = r.pipeline()
+ console.log('WHHY NOT ? ')
 
 fs.createReadStream('datasource/bfro_reports_geocoded.csv')
   .pipe(csv())

@@ -2,16 +2,22 @@
 const upload = require('./middleware')
 var express = require('express');
 var router = express.Router();
-module.exports = router.post('/upload-csv', async function (req, res) {
+const {verify}  = require('../routes/auth/jwt/verifyJWT');
+const autoCompleteSetter = require('../routes/search/autocompleteSetter');
+
+const autoSearchInit = (fileName) => {
+    autoCompleteSetter(fileName);
+}
+module.exports = router.post('/upload-csv', verify, async function (req, res) {
     try {
-        
         await upload(req, res);
         if (req.file == undefined) {
             return res.status(400).send({ message: "Choose a file to upload" });
         }
+        if(req.file && req.file.originalname) autoSearchInit(req.file.originalname);
 
         res.status(200).send({
-            message: "File uploaded successfully: " + req.file.originalname,
+            message: "File uploaded successfully: " + req.file.originalname
         });
     } catch (err) {
         console.log(err);
