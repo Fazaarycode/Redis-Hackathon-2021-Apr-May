@@ -16,11 +16,11 @@ services:
     links:
       - redis
     ports:
-      - "3000:3000"
+      - "4000:4000"
     environment:
       - REDIS_URL=redis://cache
       - NODE_ENV=development
-      - PORT=3000
+      - PORT=4000
     command:
       sh -c 'npm i && node server.js'
 
