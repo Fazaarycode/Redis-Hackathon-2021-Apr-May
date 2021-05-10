@@ -1,10 +1,8 @@
-// This is a quick way and an assumption based approach to find out columns that store coordinates.
-// @TODO: Must be a better way to achieve this.
-
 const Redis = require('ioredis');
 let redisClient = new Redis(process.env.REDIS_URL);
 
-
+// This is a quick way and an assumption based approach to find out columns that store coordinates.
+// @TODO: Must be a better way to achieve this.
 const geoCoordinateLookups = ['latitude', 'longitude', 'coordinates', 'lat', 'long',];
 
 // indexName -> fileName

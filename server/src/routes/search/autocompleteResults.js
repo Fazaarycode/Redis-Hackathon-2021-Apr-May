@@ -6,15 +6,13 @@
  * Ex:  curl http://localhost:3000/auto-complete-results?keyString=saw
  */
 
+const {verify} = require('../auth/jwt/verifyJWT');
 var express = require('express');
 var router = express.Router();
 var Redis = require('ioredis');
 var fs = require('fs');
 var connection = new Redis(process.env.REDIS_URL);
 var extractedHeaders = require('../../csvParsing/extractHeaders');
-
-let previousCsvReadFileName = '';
-let headers = []; // Extracted csv headers
 
 const  listFiles = async() => {
     let files = [];
@@ -32,6 +30,7 @@ const matchingData = async (keyString, fileNameIndex) => {
         let keys = eachValues.filter((_, index) => index % 2 === 0)
         let values = eachValues.filter((_, index) => index % 2 !== 0)
         return keys.reduce((eachRecord, key, index) => {
+            console.log("keys" , key)
             eachRecord[key] = values[index]
             return eachRecord
         }, {})
@@ -44,11 +43,15 @@ const helper = async (keyString) => {
         headers = headers.flat();
         let results = {};
         results['prefixAndFuzzy']={};
+        results['exactSingleWordMatch'] = {};
         // console.log('Headers', headers);
         await Promise.all(
             files.map(async fileName => {
                 // Time to get data. 
-                let prefixMatch = await matchingData(keyString, fileName);
+                let exactSingleWordMatch = await matchingData(keyString, fileName);
+                console.log('Exact Matches' , Array.isArray(exactSingleWordMatch));
+                results['exactSingleWordMatch'][fileName] = [];
+                results['exactSingleWordMatch'][fileName].push(exactSingleWordMatch, { searchType: 'exactSingleWordMatch' });
                 results['prefixAndFuzzy'][fileName] = [];
                 // console.log('Records found for prefix match ', prefixMatch)
                 await Promise.all((headers || []).map(async header => {
@@ -78,14 +81,14 @@ const helper = async (keyString) => {
     }
 }
 
-module.exports = router.get('/auto-complete-results', async (req, res) => {
+module.exports = router.get('/auto-complete-results', verify, async (req, res) => {
     try {
         let keyString = req.query.keyString;
+        if(!keyString) return res.send({ data: []})
         // Pass in file name to this request to dynamically pick csv file and iterate that.
         let result = await helper(keyString);
         res.setHeader('Content-Type', 'application/json');
         res.send({ data: result});
-
     }
     catch (err) {
         res.send({ message: `Failed to query due to ${err}` })
