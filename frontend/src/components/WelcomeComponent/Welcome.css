@@ -1,0 +1,31 @@
+header {
+    /* margin-top: 50px; */
+    text-align: center;
+    background: #f1ca89;
+    padding: 40px;
+}
+.welcomePage {
+    background: #ffb26b;
+    height: 100vh;
+    font-size: 20px;
+}
+
+.welcomePage > .login-and-register-cards {
+    margin: 0 500px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+
+.welcomePage > .login-and-register-cards > .login-container, .registration-container  {
+    margin-top: 100px;
+    margin-bottom: 20px;
+}
+
+.welcomePage > .login-and-register-cards > .login-container:hover, .registration-container:hover  {
+    border: 6px solid transparent;
+    transform: scale(1.5);
+    transition: 1s all ease;
+}
+

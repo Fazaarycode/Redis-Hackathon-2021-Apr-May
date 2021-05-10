@@ -66,7 +66,7 @@ app.get('/', (req, res) => {
     return res.send('Hello world');
 });
 
-const SERVERPORT = process.env.PORT || 3000;
+const SERVERPORT = process.env.PORT || 4000;
 
 app.listen(SERVERPORT, () => {
     console.log("🟢 Node server started 🟢");

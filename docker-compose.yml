@@ -23,6 +23,12 @@ services:
       - PORT=4000
     command:
       sh -c 'npm i && node server.js'
-
+  frontendreact:
+    container_name: reactfrontend
+    build: ./frontend
+    volumes:
+      - ./frontend/src:/usr/frontend/application/src
+    ports:
+      - "3000:3000"
 
 
