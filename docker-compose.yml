@@ -12,7 +12,7 @@ services:
     build: ./server
     volumes:
       - ./server/src/:/usr/workspace/application/src
-      # - ./server/datasource:/usr/workspace/application/datasource
+      - ./server/datasource:/usr/workspace/application/datasource
     links:
       - redis
     ports:

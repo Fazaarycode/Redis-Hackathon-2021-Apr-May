@@ -9,57 +9,68 @@
 var express = require('express');
 var router = express.Router();
 var Redis = require('ioredis');
+var fs = require('fs');
 var connection = new Redis(process.env.REDIS_URL);
-var extractedHeaders = require('../../csvParsing/extractHeaders')
+var extractedHeaders = require('../../csvParsing/extractHeaders');
 
 let previousCsvReadFileName = '';
 let headers = []; // Extracted csv headers
 
-const matchingData = async(keyString, fileNameIndex) => {
+const  listFiles = async() => {
+    let files = [];
+    fs.readdirSync('datasource').forEach(async file => {
+        files.push(file);
+    });
+    let headers = await Promise.all(files.map(async fileName => extractedHeaders(fileName)));
+    return {files, headers};
+}
+
+const matchingData = async (keyString, fileNameIndex) => {
     let [count, ...foundMatchingKeys] = await connection.call('FT.SEARCH', `${fileNameIndex}:index`, keyString, 'LIMIT', 0, 100)
     let foundKeys = foundMatchingKeys.filter((entry, index) => index % 2 !== 0)
     let allValues = foundKeys.map(eachValues => {
-      let keys = eachValues.filter((_, index) => index % 2 === 0)
-      let values = eachValues.filter((_, index) => index % 2 !== 0)
-      return keys.reduce((eachRecord, key, index) => {
-        eachRecord[key] = values[index]
-        return eachRecord
-      }, {})
+        let keys = eachValues.filter((_, index) => index % 2 === 0)
+        let values = eachValues.filter((_, index) => index % 2 !== 0)
+        return keys.reduce((eachRecord, key, index) => {
+            eachRecord[key] = values[index]
+            return eachRecord
+        }, {})
     })
     return { count, allValues }
 }
-const helper = async (keyString, fileName) => {
+const helper = async (keyString) => {
     try {
-        let results = []; // Suggestions
-        console.log('Previous csv datafile', previousCsvReadFileName);
-        if (fileName !== previousCsvReadFileName) {
-            headers = await extractedHeaders(fileName);
-            previousCsvReadFileName = fileName;
-        }
-        console.log('Key string ', keyString);
-        // Time to get data. 
-        let exactMatch = await matchingData(keyString, fileName);
-        console.log('Records found for exact match ', exactMatch)
-        await Promise.all((headers || []).map(async header => {
-   
-            let data = await connection.call('FT.SUGGET', header, keyString);
-            let fuzzy = await connection.call('FT.SUGGET', header, keyString);
+        let {files, headers} = await listFiles();
+        headers = headers.flat();
+        let results = {};
+        results['prefixAndFuzzy']={};
+        // console.log('Headers', headers);
+        await Promise.all(
+            files.map(async fileName => {
+                // Time to get data. 
+                let prefixMatch = await matchingData(keyString, fileName);
+                results['prefixAndFuzzy'][fileName] = [];
+                // console.log('Records found for prefix match ', prefixMatch)
+                await Promise.all((headers || []).map(async header => {
+                    console.log('each header', header)
+                    let data = await connection.call('FT.SUGGET', header, keyString);
+                    let fuzzy = await connection.call('FT.SUGGET', header, keyString, "FUZZY");
 
-            // console.log('Current Header ::: ### ' , header)
-            // console.log('Data' , `FT.SUGGET ${header} ${keyString}`)
-            // console.log('fuzzy' , fuzzy)
-            if (Array.isArray(data)) {
-                data.length !== 0
-                    ? results.push(data, {searchType: 'prefix'})
-                    : null
-            }
-            if (Array.isArray(fuzzy)) {
-                fuzzy.length !== 0
-                    ? results.push(fuzzy, {searchType: 'fuzzy'})
-                    : null
-            }
-        }))
-        console.log('All possible auto-correct suggestions: ' , results);
+                    if (Array.isArray(data)) {
+                        data.length !== 0
+                            ? results['prefixAndFuzzy'][fileName].push(data, { searchType: 'prefix' })
+                            : null
+                    }
+                    if (Array.isArray(fuzzy)) {
+                        fuzzy.length !== 0
+                            ? results['prefixAndFuzzy'][fileName].push(fuzzy, { searchType: 'fuzzy' })
+                            : null
+                    }
+                    // Fuzzy and Prefix may have same data outputs
+                    // @TODO: filter if same.
+                })) 
+            })
+        );
         return results;
     }
     catch (error) {
@@ -72,17 +83,11 @@ module.exports = router.get('/auto-complete-results', async (req, res) => {
         let keyString = req.query.keyString;
         // Pass in file name to this request to dynamically pick csv file and iterate that.
         let result = await helper(keyString);
-        res.send({ message: 'Result set ', result })
+        res.setHeader('Content-Type', 'application/json');
+        res.send({ data: result});
+
     }
     catch (err) {
-        // res.statusCode(401)
         res.send({ message: `Failed to query due to ${err}` })
     }
 })
-
-
-
-            // console.log('Query String' ,keyString)
-            // ----- Data entered as follows ---------------------
-            // console.log(`FT.SUGADD, ${header}, ${keyString} 1`);
-            // ---------------------------------------------------

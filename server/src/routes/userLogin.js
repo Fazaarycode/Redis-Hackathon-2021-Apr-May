@@ -15,10 +15,10 @@ module.exports =  router.post('/user-login', function (req, res) {
                 if (myUser && myUser.password === password) {
                     let accessToken = await signJWT(myUser);
                     if(accessToken) {
-                        res.cookie("jwt", accessToken, {secure: false, httpOnly: false})
+                        res.cookie("jwt", accessToken)
                         res.status(200).send({ userName }) // Other fields such as Name etc.
                     }
-                } 
+                }
                 else {
                     throw new Error('Could not find suitable user');
                 }

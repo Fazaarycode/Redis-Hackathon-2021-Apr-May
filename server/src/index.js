@@ -3,7 +3,7 @@ const express = require("express");
 const axios = require("axios");
 var cookieparser = require("cookie-parser");
 const app = express();
-const { login, registration } = require('./routes/index');
+const { login, registration, logout } = require('./routes/index');
 const redisClient = require('./redisClient/connection');
 const SightingData = require('./routes/search/searchFunctions') 
 const load = require('./routes/search/loadData');
@@ -13,8 +13,7 @@ const autocompleteResults = require('./routes/search/autocompleteResults')
 let sightingData = new SightingData()
 sightingData.init()
 
-load();
-
+// load();
 
 app.use(express.json()) // Body-parser
 
@@ -24,6 +23,8 @@ app.use(cookieparser())
 app.use(login);
 
 app.use(registration);
+
+app.use(logout);
 
 app.use(uploader);
 
@@ -61,25 +62,9 @@ app.get('/sightings/state/:state', async (req, res) => {
     res.send(await sightingData.findContaining(req.params.text))
   })
 
-// app.get('/load', (req,res) => {
-//   // if(req.query.dataset === '') {
-//     console.log('RUL ')
-//     load();
-//     res.send();
-//   // }
-// })
-
 app.get('/', (req, res) => {
     return res.send('Hello world');
 });
-
-// Here is where we load data.
-
-
-
-// -------------
-
-// ---------------
 
 const SERVERPORT = process.env.PORT || 3000;
 

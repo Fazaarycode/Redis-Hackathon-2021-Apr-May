@@ -14,17 +14,18 @@ const refreshTokenHelper = async (payload) => {
 }
 
 const accessTokenHelper = async (payload) => {
+    console.log('payload', payload)
     return new Promise((resolve, reject) => {
         crypto.randomBytes(256, async function (ex, buf) {
             if (ex) reject(ex);
-            let tt = buf.toString('base64');
             console.log('SIGNING TOKEN ' , process.env.JWT_SECRET)
             token = await jwtr.sign(payload, process.env.JWT_SECRET, { expiresIn: 864000 }); // Seconds 
-            console.log('FF ? ,', token)
+            await jwtr.destroy(token);
             resolve(token);
         });
     })
-}
+}  
+
 
     // Create a token
     let signJWT = async (payload) => {
@@ -38,10 +39,3 @@ const accessTokenHelper = async (payload) => {
     }
 
     module.exports = signJWT;
-
-
-
- //create the refresh token with the longer lifespan
-        // var decoded = await jwtr.verify(sign, buf);
-        // console.log('Token ', sign);
-        // console.log('Decoded ', decoded);

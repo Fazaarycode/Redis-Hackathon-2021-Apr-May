@@ -17,7 +17,7 @@ exports.verify = async function (req, res, next) {
         //use the jwt.verify method to verify the access token
         //throws an error if the token has expired or has a invalid signature
         payload = await jwtr.verify(accessToken, process.env.JWT_SECRET);
-        next()
+        next();
     }
     catch (error) {
         //if an error occured return request unauthorized error
