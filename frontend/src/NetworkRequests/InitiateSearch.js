@@ -7,3 +7,4 @@ const InitiateSearch = async keyString => {
 }
 
 export default InitiateSearch;
+

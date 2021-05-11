@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import fileUpload from '../../NetworkRequests/UploadFile';
 import InitiateSearch from '../../NetworkRequests/InitiateSearch';
+import ExactSearchInteratorComponent from './ExactSearchIteratorComponent';
 
 const SearchComponent = () => {
 
@@ -13,9 +14,9 @@ const SearchComponent = () => {
             "fileUpload",
             selectedFile,
             selectedFile.name,
-          );
+        );
         let status = await fileUpload(formData);
-        if(status === 200) alert('Uploaded successfully!')
+        if (status === 200) alert('Uploaded successfully!')
     }
 
     const [selectedFile, setSelectedFile] = useState("");
@@ -29,7 +30,7 @@ const SearchComponent = () => {
         // console.log(InitiateSearch(value))
         // Request for possible matches.
         let results = await InitiateSearch(value);
-        setSearchResults(results);        
+        setSearchResults(results);
     }
 
     return <div className="searchComponent">
@@ -50,15 +51,15 @@ const SearchComponent = () => {
                             </p>
                             <Form >
                                 <Form.Group >
-                                    <Form.File id="fileUpload" 
-                                    label={selectedFile && selectedFile.name}
-                                    className="fileUpload"
-                                    onChange={(e) => setSelectedFile(e.target.files[0])}
+                                    <Form.File id="fileUpload"
+                                        label={selectedFile && selectedFile.name}
+                                        className="fileUpload"
+                                        onChange={(e) => setSelectedFile(e.target.files[0])}
                                     />
                                 </Form.Group>
                             </Form>
                             <div className="confirmUpload">
-                            <Button variant="primary" onClick={() => uploadFile()}>Confirm upload</Button>
+                                <Button variant="primary" onClick={() => uploadFile()}>Confirm upload</Button>
 
                             </div>
                         </div>
@@ -89,8 +90,35 @@ const SearchComponent = () => {
                 </Container>
             </div>
             {/* Search Results */}
-            <div className = "searchResults">
-                <p> { JSON.stringify(searchResults) } </p>
+            <div className="searchResults">
+                <p> Exact Word Matches</p>
+                {/* <p> Exact Word Matches { JSON.stringify(searchResults)}</p> */}
+                {
+                    searchResults && searchResults.data && searchResults.data['exactSingleWordMatch']
+                    && Object.entries(searchResults.data['exactSingleWordMatch'])
+                        .map(([k, v]) => {
+                            return <div>
+                                <p> {`Dataset Name: ${k}`}</p>
+                                {
+                                    v[0] && v[0].count !== 0 ?
+                                        <p>{`Total Occurrences ${v[0].count}`}</p>
+                                        : null
+                                }
+                                <p> Matching Payloads </p>
+                                {
+                                 v[0] && v[0].allValues 
+                                 ?
+                                 v[0].allValues.map(eachValue => {
+                                    return <ExactSearchInteratorComponent 
+                                    eachValue = {eachValue}
+                                    keyString={keyString}
+                                    />
+                                 })
+                                 : null
+                                }
+                            </div>
+                        })
+                }
             </div>
         </div>
     </div>;
