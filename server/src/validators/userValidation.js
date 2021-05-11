@@ -1,23 +1,25 @@
 module.exports = {
     sanityCheckUserRegistration: (requestBody) => {
 
-        if (!requestBody) res.status(400).send({ message: 'Message Body cannot be empty.' });
+        if (!requestBody) throw new Error({ message: 'Message Body cannot be empty.' });
 
         let { userName, password, confirmPassword, organisation } = requestBody;
 
-        if (!userName || !password || !confirmPassword || !organisation) res.status(400).send({ message: 'One or more fields missing' });
+        if (!userName || !password || !confirmPassword || !organisation) throw new Error({ message: 'One or more fields missing' });
 
-        if (password !== confirmPassword) res.status(400).send({ message: 'Passwords dont match.' });
+        if (password !== confirmPassword) throw new Error({ message: 'Passwords dont match.' });
+
+        return true;
 
     },
 
     sanityCheckLoginDetails: (requestBody) => {
 
-        if (!requestBody) res.status(400).send({ message: 'Message Body cannot be empty.' });
+        if (!requestBody) throw new Error({ message: 'Message Body cannot be empty.' });
 
         let { userName, password } = requestBody;
 
-        if (!userName || !password) res.status(400).send({ message: 'One or more fields missing' });
+        if (!userName || !password) throw new Error({ message: 'One or more fields missing' });
 
     }
 }

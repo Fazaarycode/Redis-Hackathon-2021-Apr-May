@@ -6,30 +6,29 @@ const { sanityCheckUserRegistration } = require('../validators/userValidation')
 // User Registration
 module.exports = router.post('/user-registration', function (req, res) {
     try {
-        // let client = new Redis('redis://cache:6379')
-        // Sanity Check
-        sanityCheckUserRegistration(req.body)
+        console.log('Hey there...', req.body)
+        // sanityCheckUserRegistration(req.body) // Fix this spagetti.
         // Check if User exists in Redis Cache.
-        let { userName } = req.body;
-        client.get(userName, async (err, user) => {
+        let { email } = req.body;
+        client.get(email, async (err, user) => {
             if (err) throw err;
             if (user) {
                 res.status(200).send({
-                    user: JSON.parse(user),
+                    user: email,
                     message: "User found in cache"
                 });
             }
             else {
-                client.set(userName, JSON.stringify(req.body));
-                res.status(200).send({
-                    userData: req.body,
+                client.set(email, JSON.stringify(req.body));
+                res.json({
+                    email,
                     message: "cache miss"
                 });
             }
         })
 
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({ message: err });
     }
 });
 

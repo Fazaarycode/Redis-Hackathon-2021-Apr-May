@@ -1,8 +1,13 @@
 .loginContainer {
-    margin-top: 50px;
     position: relative;
+    background: #f1ca89;
+    height: 100vh;
 }
 
 .submit-button {
     margin-top: 10px;
+}
+
+.text-info {
+    margin-top: 50px;
 }

@@ -3,6 +3,7 @@ const express = require("express");
 const axios = require("axios");
 var cookieparser = require("cookie-parser");
 const app = express();
+const cors = require('cors');
 const { login, registration, logout } = require('./routes/index');
 const redisClient = require('./redisClient/connection');
 const SightingData = require('./routes/search/searchFunctions') 
@@ -14,6 +15,10 @@ let sightingData = new SightingData()
 sightingData.init()
 
 // load();
+
+app.use(cors());
+
+// app.options('*', cors());
 
 app.use(express.json()) // Body-parser
 
@@ -63,7 +68,7 @@ app.get('/sightings/state/:state', async (req, res) => {
   })
 
 app.get('/', (req, res) => {
-    return res.send('Hello world');
+    return res.json('Hello world');
 });
 
 const SERVERPORT = process.env.PORT || 4000;

@@ -81,7 +81,8 @@ const helper = async (keyString) => {
     }
 }
 
-module.exports = router.get('/auto-complete-results', verify, async (req, res) => {
+// verify
+module.exports = router.get('/auto-complete-results', async (req, res) => {
     try {
         let keyString = req.query.keyString;
         if(!keyString) return res.send({ data: []})

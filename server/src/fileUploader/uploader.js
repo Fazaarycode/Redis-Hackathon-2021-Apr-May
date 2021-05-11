@@ -8,7 +8,8 @@ const autoCompleteSetter = require('../routes/search/autocompleteSetter');
 const autoSearchInit = (fileName) => {
     autoCompleteSetter(fileName);
 }
-module.exports = router.post('/upload-csv', verify, async function (req, res) {
+// verify -- Include this Middleware
+module.exports = router.post('/upload-csv', async function (req, res) {
     try {
         await upload(req, res);
         if (req.file == undefined) {

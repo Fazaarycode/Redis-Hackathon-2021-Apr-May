@@ -1,0 +1,26 @@
+.searchComponent {
+    position: relative;
+    background-color: #ffb26b;
+    height: 100vh;
+}
+
+.search-and-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 25%;
+    margin-top: 20px;
+}
+
+.upload-arena {
+    margin-top: 20px;
+}
+
+.search-arena {
+    width: 60%;
+    margin-top: 50px;
+}
+.confirmUpload {
+    margin-top: 20px;
+    position: relative;
+}

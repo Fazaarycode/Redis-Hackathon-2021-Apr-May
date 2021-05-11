@@ -6,7 +6,7 @@ const { sanityCheckUserRegistration } = require('../../validators/userValidation
 module.exports = router.post('/user-registration', function (req, res) {
     try {
         // Sanity Check
-        sanityCheckUserRegistration(req.body)
+        // sanityCheckUserRegistration(req.body)
         // Check if User exists in Redis Cache.
         let { userName } = req.body;
         connectToRedis().get(userName, async (err, user) => {
