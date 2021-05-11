@@ -9,7 +9,7 @@ const autoSearchInit = (fileName) => {
     autoCompleteSetter(fileName);
 }
 // verify -- Include this Middleware
-module.exports = router.post('/upload-csv', async function (req, res) {
+module.exports = router.post('/upload-csv', verify, async function (req, res) {
     try {
         await upload(req, res);
         if (req.file == undefined) {

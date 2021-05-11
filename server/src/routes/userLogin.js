@@ -16,7 +16,7 @@ module.exports =  router.post('/user-login', function (req, res) {
                 if (myUser && myUser.password === password) {
                     let accessToken = await signJWT(myUser);
                     if(accessToken) {
-                        res.cookie("jwt", accessToken)
+                        res.cookie("jwt", accessToken, { httpOnly: true, secure: true})
                         res.status(200).send({ email }) // Other fields such as Name etc.
                     }
                 }
