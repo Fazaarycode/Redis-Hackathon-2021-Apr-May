@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 
 import fileUpload from '../../NetworkRequests/UploadFile';
 import InitiateSearch from '../../NetworkRequests/InitiateSearch';
-import ExactSearchInteratorComponent from './ExactSearchIteratorComponent';
-
+import FuzzyPrefixMatchComponents from './FuzzyPrefixMatchComponents';
+import ExactSearchComponent from './ExactSearchComponent';
 const SearchComponent = () => {
 
     const uploadFile = async () => {
@@ -91,34 +91,26 @@ const SearchComponent = () => {
             </div>
             {/* Search Results */}
             <div className="searchResults">
-                <p> Exact Word Matches</p>
-                {/* <p> Exact Word Matches { JSON.stringify(searchResults)}</p> */}
-                {
-                    searchResults && searchResults.data && searchResults.data['exactSingleWordMatch']
-                    && Object.entries(searchResults.data['exactSingleWordMatch'])
-                        .map(([k, v]) => {
-                            return <div>
-                                <p> {`Dataset Name: ${k}`}</p>
-                                {
-                                    v[0] && v[0].count !== 0 ?
-                                        <p>{`Total Occurrences ${v[0].count}`}</p>
-                                        : null
-                                }
-                                <p> Matching Payloads </p>
-                                {
-                                 v[0] && v[0].allValues 
-                                 ?
-                                 v[0].allValues.map(eachValue => {
-                                    return <ExactSearchInteratorComponent 
-                                    eachValue = {eachValue}
-                                    keyString={keyString}
-                                    />
-                                 })
-                                 : null
-                                }
-                            </div>
-                        })
-                }
+                <div classNameName="prefixMatches">
+                    <ExactSearchComponent
+                        searchResults={searchResults}
+                        keyString = {keyString}
+                    />
+                </div>
+
+                <div classNameName="prefixMatches">
+                    <FuzzyPrefixMatchComponents
+                        searchResults={searchResults}
+                        searchType={'prefix'}
+                    />
+                </div>
+
+                <div classNameName="fuzzyMatches">
+                    <FuzzyPrefixMatchComponents
+                        searchResults={searchResults}
+                        searchType={'fuzzy'}
+                    />
+                </div>
             </div>
         </div>
     </div>;

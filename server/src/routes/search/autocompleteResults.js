@@ -6,7 +6,7 @@
  * Ex:  curl http://localhost:3000/auto-complete-results?keyString=saw
  */
 
-const {verify} = require('../auth/jwt/verifyJWT');
+const { verify } = require('../auth/jwt/verifyJWT');
 var express = require('express');
 var router = express.Router();
 var Redis = require('ioredis');
@@ -14,64 +14,85 @@ var fs = require('fs');
 var connection = new Redis(process.env.REDIS_URL);
 var extractedHeaders = require('../../csvParsing/extractHeaders');
 
-const  listFiles = async() => {
+const listFiles = async () => {
     let files = [];
     fs.readdirSync('datasource').forEach(async file => {
         files.push(file);
     });
-    let headers = await Promise.all(files.map(async fileName => extractedHeaders(fileName)));
-    return {files, headers};
+    let headersPerFile = {};
+    let headers = await Promise.all(files.map(async fileName => {
+        let x = await extractedHeaders(fileName);
+        headersPerFile[fileName] = x;
+        return x;
+    }));
+    return { files, headers, headersPerFile };
 }
 
-const matchingData = async (keyString, fileNameIndex) => {
-    let [count, ...foundMatchingKeys] = await connection.call('FT.SEARCH', `${fileNameIndex}:index`, keyString, 'LIMIT', 0, 100)
+const matchingData = async (keyString, fileNameIndex, headers) => {
+    let [count, ...foundMatchingKeys] = await connection.call('FT.SEARCH', `${fileNameIndex}:index`, keyString, 'LIMIT', 0, 100);
     let foundKeys = foundMatchingKeys.filter((entry, index) => index % 2 !== 0)
-    let allValues = foundKeys.map(eachValues => {
+
+    console.log(`Command FT.SEARCH ${fileNameIndex}:index ${keyString}`)
+    let allValues = foundKeys.map((eachValues, i) => {        
         let keys = eachValues.filter((_, index) => index % 2 === 0)
         let values = eachValues.filter((_, index) => index % 2 !== 0)
         return keys.reduce((eachRecord, key, index) => {
-            console.log("keys" , key)
             eachRecord[key] = values[index]
             return eachRecord
         }, {})
     })
     return { count, allValues }
 }
+
+const arrayEquals = (a, b) => {
+    return Array.isArray(a) &&
+        Array.isArray(b) &&
+        a.length === b.length &&
+        a.every((val, index) => val === b[index]);
+}
+
 const helper = async (keyString) => {
     try {
-        let {files, headers} = await listFiles();
+        let { files, headers, headersPerFile } = await listFiles();
+        console.log('headersPerFile', headersPerFile)
         headers = headers.flat();
         let results = {};
-        results['prefixAndFuzzy']={};
+        results['prefix'] = {};
+        results['fuzzy'] = {};
         results['exactSingleWordMatch'] = {};
         // console.log('Headers', headers);
         await Promise.all(
             files.map(async fileName => {
                 // Time to get data. 
-                let exactSingleWordMatch = await matchingData(keyString, fileName);
-                console.log('Exact Matches' , Array.isArray(exactSingleWordMatch));
+                let exactSingleWordMatch = await matchingData(keyString, fileName, headers);
+                // console.log('Exact Matches' , Array.isArray(exactSingleWordMatch));
                 results['exactSingleWordMatch'][fileName] = [];
                 results['exactSingleWordMatch'][fileName].push(exactSingleWordMatch, { searchType: 'exactSingleWordMatch' });
-                results['prefixAndFuzzy'][fileName] = [];
+                results['prefix'][fileName] = [];
+                results['fuzzy'][fileName] = [];
                 // console.log('Records found for prefix match ', prefixMatch)
                 await Promise.all((headers || []).map(async header => {
-                    console.log('each header', header)
+                    // console.log('each header', header)
                     let data = await connection.call('FT.SUGGET', header, keyString);
                     let fuzzy = await connection.call('FT.SUGGET', header, keyString, "FUZZY");
-
+                    
                     if (Array.isArray(data)) {
                         data.length !== 0
-                            ? results['prefixAndFuzzy'][fileName].push(data, { searchType: 'prefix' })
+                            ? results['prefix'][fileName].push(data)
                             : null
                     }
-                    if (Array.isArray(fuzzy)) {
-                        fuzzy.length !== 0
-                            ? results['prefixAndFuzzy'][fileName].push(fuzzy, { searchType: 'fuzzy' })
-                            : null
-                    }
+
                     // Fuzzy and Prefix may have same data outputs
-                    // @TODO: filter if same.
-                })) 
+                    // Hence add the ones that are truly fuzzy to the resultant output
+                    if (!arrayEquals(data.sort(), fuzzy.sort())) {
+                        if (Array.isArray(fuzzy)) {
+                            fuzzy.length !== 0
+                                ? results['fuzzy'][fileName].push(fuzzy)
+                                : null
+                        }
+                    }
+
+                }))
             })
         );
         return results;
@@ -85,11 +106,11 @@ const helper = async (keyString) => {
 module.exports = router.get('/auto-complete-results', async (req, res) => {
     try {
         let keyString = req.query.keyString;
-        if(!keyString) return res.send({ data: []})
+        if (!keyString) return res.send({ data: [] })
         // Pass in file name to this request to dynamically pick csv file and iterate that.
         let result = await helper(keyString);
         res.setHeader('Content-Type', 'application/json');
-        res.send({ data: result});
+        res.send({ data: result });
     }
     catch (err) {
         res.send({ message: `Failed to query due to ${err}` })

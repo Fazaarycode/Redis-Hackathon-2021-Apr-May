@@ -1,6 +1,6 @@
 import './ExactSearchInteratorComponent.css'
 const ExactSearchInteratorComponent = (props, keyString) => {
-    return <div>
+    return <div className="iteratorContainer">
         {
             props.eachValue && 
             Object.entries(props.eachValue).map(([k,v])=> {
