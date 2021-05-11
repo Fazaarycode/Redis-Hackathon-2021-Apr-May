@@ -1,0 +1,5 @@
+.exactMatchAccordion {
+    max-height: 600px;
+    overflow: scroll;
+    transition: 1s all ease;
+}

@@ -39,32 +39,38 @@ const SearchComponent = () => {
         </header>
         <div className="search-and-upload">
             <div className="fileUploader">
-                <Accordion defaultActiveKey="1">
-                    <Accordion.Toggle as={Button} eventKey="0">
-                        Upload Data set
+                <Container>
+                    <Row>
+                        <Col>
+                            <Accordion defaultActiveKey="1">
+                                <Accordion.Toggle as={Button} eventKey="0">
+                                    Upload Data set
                     </Accordion.Toggle>
 
-                    <Accordion.Collapse eventKey="0">
-                        <div className="upload-arena">
-                            <p className="upload-text-helper">
-                                Upload a new CSV dataset here 👇
+                                <Accordion.Collapse eventKey="0">
+                                    <div className="upload-arena">
+                                        <p className="upload-text-helper">
+                                            Upload a new CSV dataset here 👇
                             </p>
-                            <Form >
-                                <Form.Group >
-                                    <Form.File id="fileUpload"
-                                        label={selectedFile && selectedFile.name}
-                                        className="fileUpload"
-                                        onChange={(e) => setSelectedFile(e.target.files[0])}
-                                    />
-                                </Form.Group>
-                            </Form>
-                            <div className="confirmUpload">
-                                <Button variant="primary" onClick={() => uploadFile()}>Confirm upload</Button>
+                                        <Form >
+                                            <Form.Group >
+                                                <Form.File id="fileUpload"
+                                                    label={selectedFile && selectedFile.name}
+                                                    className="fileUpload"
+                                                    onChange={(e) => setSelectedFile(e.target.files[0])}
+                                                />
+                                            </Form.Group>
+                                        </Form>
+                                        <div className="confirmUpload">
+                                            <Button variant="primary" onClick={() => uploadFile()}>Confirm upload</Button>
 
-                            </div>
-                        </div>
-                    </Accordion.Collapse>
-                </Accordion>
+                                        </div>
+                                    </div>
+                                </Accordion.Collapse>
+                            </Accordion>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
             {/* File uploader ends here */}
             {/* Search pane */}
@@ -91,10 +97,10 @@ const SearchComponent = () => {
             </div>
             {/* Search Results */}
             <div className="searchResults">
-                <div classNameName="prefixMatches">
+                <div classNameName="exactMatchComponent">
                     <ExactSearchComponent
                         searchResults={searchResults}
-                        keyString = {keyString}
+                        keyString={keyString}
                     />
                 </div>
 

@@ -1,12 +1,14 @@
 .searchComponent {
     position: relative;
     background-color: #ffb26b;
-    /* padding: 50px; */
+    min-height: 100%;
+    min-width: 100%;
+    position: absolute;
 }
 
 .searchResults > div {
-    /* margin-bottom: 5px; */
-    height: auto;
+    min-height: 100%;
+    padding: 20px;
 }
 
 .search-and-upload {
@@ -30,10 +32,12 @@
     position: relative;
 }
 
-.exactMatchAccordion {
-    height: auto;
+.exactMatchComponent {
+    /* max-height: 500px; */
+
 }
 
 .heading-exact-match {
     margin-top: 20px;
 }
+

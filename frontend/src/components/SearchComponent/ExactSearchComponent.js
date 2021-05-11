@@ -1,6 +1,6 @@
 import { Accordion, Button } from 'react-bootstrap';
 import ExactSearchInteratorComponent from './ExactSearchIteratorComponent';
-
+import './ExactSearchComponent.css'
 const ExactSearchComponent = ({ searchResults, keyString }) => {
     return <div className="exactMatches">
          {keyString && <h3 className="heading-exact-match"> Exact Word Matches</h3>}
