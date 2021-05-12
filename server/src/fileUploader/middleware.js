@@ -7,6 +7,7 @@ const DIR = path.join(__dirname, '../../datasource'); // Destination where the f
 let storage = multer.diskStorage({
     destination: DIR,
     filename: (req, file, cb) => {
+        console.log(file, '####### ')
         const fileName = file.originalname.toLowerCase().split(' ').join('-');
         cb(null, fileName)
     },
@@ -18,6 +19,7 @@ let upload = multer({
         fileSize: 1024 * 1024 * 6
     },
     fileFilter: (req, file, cb) => {
+        console.log('cool', file)
         // Accept CSV only.
         if (file.mimetype == "text/csv") {
             cb(null, true);

@@ -89,29 +89,29 @@ const SearchComponent = () => {
                                         placeholder="Search Text"
                                         required
                                     />
-                                </Form.Group>
+                                 </Form.Group>
                             </Form>
                         </Col>
-                    </Row>
+                     </Row>
                 </Container>
             </div>
             {/* Search Results */}
             <div className="searchResults">
-                <div classNameName="exactMatchComponent">
+                <div className="exactMatchComponent">
                     <ExactSearchComponent
                         searchResults={searchResults}
                         keyString={keyString}
                     />
                 </div>
 
-                <div classNameName="prefixMatches">
+                <div className="prefixMatches">
                     <FuzzyPrefixMatchComponents
                         searchResults={searchResults}
                         searchType={'prefix'}
                     />
                 </div>
 
-                <div classNameName="fuzzyMatches">
+                <div className="fuzzyMatches">
                     <FuzzyPrefixMatchComponents
                         searchResults={searchResults}
                         searchType={'fuzzy'}

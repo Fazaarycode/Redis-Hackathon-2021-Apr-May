@@ -12,6 +12,7 @@ const autoSearchInit = (fileName) => {
 module.exports = router.post('/upload-csv', verify, async function (req, res) {
     try {
         await upload(req, res);
+        console.log('a....', req.file)
         if (req.file == undefined) {
             return res.status(400).send({ message: "Choose a file to upload" });
         }

@@ -20,8 +20,12 @@ const Login = () => {
     const handleOnSubmit = async (e) => {
         e.preventDefault();
         let payload = { email, password };
-        let userLogin = await SignInRequest(payload);
-        if(userLogin.email) setAllowAccess(true);
+        let {userData, status}  = await SignInRequest(payload);
+        console.log('Sstt' , status)
+        if(status === 304) alert('Could not find suitable user');
+        else {
+            setAllowAccess(true);
+        }
     }
     return (
         <div className="loginContainer">
@@ -32,7 +36,7 @@ const Login = () => {
                 <Container>
                 <Row>
                     <Col>
-                        <h1 className="text-info text-center">Client Login</h1>
+                        <h1 className="text-info text-center">Clientw Login</h1>
                         <hr />
                         {/* {error && <Alert variant="danger">{error}</Alert>} */}
                         {/* onSubmit={handleOnSubmit} */}
@@ -42,7 +46,8 @@ const Login = () => {
                                 <Form.Control
                                     type="email"
                                     name="email"
-
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter Email"
                                     required
                                 />
@@ -52,7 +57,8 @@ const Login = () => {
                                 <Form.Control
                                     type="password"
                                     name="password"
-
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     placeholder="password"
                                     required
                                 />

@@ -6,3 +6,7 @@
 .highlighter {
     color: red;
 }
+
+.hide {
+    display: none;
+}

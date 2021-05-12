@@ -41,7 +41,12 @@ const matchingData = async (keyString, fileNameIndex, headers) => {
             return eachRecord
         }, {})
     })
+
+    // We have indexed every column. It is possible that our search results will be found for every one of the indexes for the same row.
+    // We only non-duplicated full records.
+    let filteredResults = Object.entries(allValues).filter(([k,v]) => Object.keys(v).length === headers.length);
     return { count, allValues }
+    // return { count: filteredResults.length, allValues: filteredResults }
 }
 
 const arrayEquals = (a, b) => {

@@ -3,3 +3,13 @@
     overflow: scroll;
     transition: 1s all ease;
 }
+
+.dataset-heading {
+    margin-top: 20px;
+}
+
+.cadence {
+    font-size: 20px;
+    border: 1px solid brown;
+    max-width: 225px;
+}

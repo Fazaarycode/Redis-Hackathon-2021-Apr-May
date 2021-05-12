@@ -7,6 +7,7 @@ var jwtr = new JWTR(client);
 // Keep it simple - TODO: Implement Refresh Tokens later.
 
 exports.verify = async function (req, res, next) {
+    console.log('aAcess' , req.cookies.jwt)
     let accessToken = req.cookies.jwt;
     let payload;
     //if there is no token stored in cookies, the request is unauthorized

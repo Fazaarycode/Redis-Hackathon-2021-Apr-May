@@ -16,14 +16,14 @@ const ExactSearchComponent = ({ searchResults, keyString }) => {
                                     (v[0].count) : '0'}) found `}
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey="0">
-                                <div>
-                                    <p> {`Dataset Name: ${k}`}</p>
+                                <div class="dataset-heading">
+                                    <h3> {`Dataset Name: ${k}`}</h3>
                                     {
                                         v[0] && v[0].count !== 0 ?
-                                            <p>{`Total Occurrences ${v[0].count}`}</p>
+                                            <p className="cadence">{`Total Occurrences: ${v[0].count}`}</p>
                                             : null
                                     }
-                                    <p> Matching Payloads </p>
+                                    <h4 className="matching-heading"> Matching Payloads </h4>
                                     {
                                         v[0] && v[0].allValues
                                             ?
