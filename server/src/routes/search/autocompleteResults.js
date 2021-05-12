@@ -3,7 +3,8 @@
  * For every string type, runs FT.SUGGET against it. 
  * Decipher the header (key) for the string we check in FT.SUGGET command.
  * For quick escape, return all matching records for all the headers. 
- * Ex:  curl http://localhost:3000/auto-complete-results?keyString=saw
+ * Ex:  curl http://localhost:4000/auto-complete-results?keyString=saw
+ * Output depends on the data we have indexed.
  */
 
 const { verify } = require('../auth/jwt/verifyJWT');
@@ -13,6 +14,7 @@ var Redis = require('ioredis');
 var fs = require('fs');
 var connection = new Redis(process.env.REDIS_URL);
 var extractedHeaders = require('../../csvParsing/extractHeaders');
+
 
 const listFiles = async () => {
     let files = [];
@@ -33,7 +35,7 @@ const matchingData = async (keyString, fileNameIndex, headers) => {
     let foundKeys = foundMatchingKeys.filter((entry, index) => index % 2 !== 0)
 
     console.log(`Command FT.SEARCH ${fileNameIndex}:index ${keyString}`)
-    let allValues = foundKeys.map((eachValues, i) => {        
+    let allValues = foundKeys.map((eachValues, i) => {
         let keys = eachValues.filter((_, index) => index % 2 === 0)
         let values = eachValues.filter((_, index) => index % 2 !== 0)
         return keys.reduce((eachRecord, key, index) => {
@@ -44,7 +46,7 @@ const matchingData = async (keyString, fileNameIndex, headers) => {
 
     // We have indexed every column. It is possible that our search results will be found for every one of the indexes for the same row.
     // We only non-duplicated full records.
-    let filteredResults = Object.entries(allValues).filter(([k,v]) => Object.keys(v).length === headers.length);
+    let filteredResults = Object.entries(allValues).filter(([k, v]) => Object.keys(v).length === headers.length);
     return { count, allValues }
     // return { count: filteredResults.length, allValues: filteredResults }
 }
@@ -76,11 +78,10 @@ const helper = async (keyString) => {
                 results['prefix'][fileName] = [];
                 results['fuzzy'][fileName] = [];
                 // console.log('Records found for prefix match ', prefixMatch)
-                await Promise.all((headers || []).map(async header => {
+                await Promise.all((headersPerFile[fileName] || []).map(async header => {
                     // console.log('each header', header)
                     let data = await connection.call('FT.SUGGET', header, keyString);
                     let fuzzy = await connection.call('FT.SUGGET', header, keyString, "FUZZY");
-                    
                     if (Array.isArray(data)) {
                         data.length !== 0
                             ? results['prefix'][fileName].push(data)
@@ -99,7 +100,7 @@ const helper = async (keyString) => {
 
                 }))
             })
-        );
+        )
         return results;
     }
     catch (error) {
@@ -108,7 +109,7 @@ const helper = async (keyString) => {
 }
 
 // verify
-module.exports = router.get('/auto-complete-results', async (req, res) => {
+module.exports = router.get('/auto-complete-results', verify, async (req, res) => {
     try {
         let keyString = req.query.keyString;
         if (!keyString) return res.send({ data: [] })

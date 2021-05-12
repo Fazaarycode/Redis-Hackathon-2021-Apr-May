@@ -3,10 +3,9 @@ import React from 'react';
 import './FuzzyPrefixMatchComponents.css'
 
 const stringToArray = (str) => {
-    return str[0];
+    return [...str];
 }
 const arrayLength = (str) => {
-    // console.log('ILL ' ,str)
     return (Array.isArray(str) && str.length) || [].length;
 }
 
@@ -18,6 +17,7 @@ const FuzzyPrefixMatchComponents = (props) => {
             && Object.entries(searchResults.data[searchType])
                 .map(([k, v]) => {
                     return <div className="exactMatchAccordion">
+                        
                         <Accordion defaultActiveKey="0">
                             <Accordion.Toggle as={Button} eventKey="0">
                                 {`${props.searchType.charAt(0).toUpperCase() + props.searchType.slice(1)} based match Results (${arrayLength(stringToArray(v))}) found`}                                  </Accordion.Toggle>
@@ -27,12 +27,11 @@ const FuzzyPrefixMatchComponents = (props) => {
                                     {
                                         v[0]
                                             ?
-                                            // <p className="highlighter"> {stringToArray(v)}</p>
                                             <ul>
                                                 {
                                                     stringToArray(v).map(values => {
                                                         return <li>
-                                                            {values}
+                                                            {values.join(', ')}
                                                         </li>
                                                     })
                                                 }

@@ -1,9 +1,9 @@
 import './ExactSearchInteratorComponent.css'
 
 const classNamePicker = (objectValue, keyString, k) => {
-    console.log('OBJ ' , objectValue)
     if(k === '0' || k === 0 || Number(k)) return 'hide';
-    if(objectValue === keyString || (Array.isArray(objectValue) && Array.isArray(objectValue).toLowerCase().substr(keyString.toLowerCase()))) return 'highlighter';
+    if(objectValue === keyString || objectValue.toLowerCase().includes(keyString.toLowerCase())) return 'highlighter';
+    // Iterate and find value if array. @TODO
     return 'normal';
 }
 
