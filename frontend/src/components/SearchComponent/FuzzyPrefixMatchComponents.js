@@ -20,7 +20,7 @@ const FuzzyPrefixMatchComponents = (props) => {
                         
                         <Accordion defaultActiveKey="0">
                             <Accordion.Toggle as={Button} eventKey="0">
-                                {`${props.searchType.charAt(0).toUpperCase() + props.searchType.slice(1)} based match Results (${arrayLength(stringToArray(v))}) found`}                                  </Accordion.Toggle>
+                                {`${props.searchType.charAt(0).toUpperCase() + props.searchType.slice(1)} based match Results (${arrayLength(stringToArray(v))}) found`} </Accordion.Toggle>
                             <Accordion.Collapse eventKey="0">
                                 <div>
                                     <h3 className="dataset-heading"> {`Dataset Name: ${k}`}</h3>

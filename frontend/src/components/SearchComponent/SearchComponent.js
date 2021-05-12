@@ -1,9 +1,11 @@
 import { Form, Accordion, Button, Container, Row, Col } from 'react-bootstrap';
 import './SearchComponent.css';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import fileUpload from '../../NetworkRequests/UploadFile';
 import InitiateSearch from '../../NetworkRequests/InitiateSearch';
+import Logout from '../../NetworkRequests/Logout';
 import FuzzyPrefixMatchComponents from './FuzzyPrefixMatchComponents';
 import ExactSearchComponent from './ExactSearchComponent';
 const SearchComponent = () => {
@@ -33,10 +35,23 @@ const SearchComponent = () => {
         setSearchResults(results);
     }
 
+    const performLogout = async () => {
+        await Logout();
+    }
+
     return <div className="searchComponent">
+        <div className="header-and-navigations">
+        <div className="go-home">
+            <Button><Link to ='/'>Home </Link></Button>
+        </div>
         <header>
             You can add in your dataset or search for a text, across all of your datasets really really quickly.
         </header>
+        <div className="logout">
+            <Button onClick={(e) => performLogout()}> Logout </Button>
+        </div>
+        </div>
+        
         <div className="search-and-upload">
             <div className="fileUploader">
                 <Container>

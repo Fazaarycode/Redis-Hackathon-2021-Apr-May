@@ -32,12 +32,28 @@
     position: relative;
 }
 
-.exactMatchComponent {
-    /* max-height: 500px; */
-
+.header-and-navigations {
+    display: flex;
+    justify-content: space-around;
 }
 
 .heading-exact-match {
     margin-top: 20px;
 }
 
+.logout {
+    position: absolute;
+    margin-top: 30px;
+    right: 20px;
+}
+
+.go-home {
+    position: absolute;
+    margin-top: 30px;
+    left: 20px;
+}
+
+.go-home * a {
+    color: white!important;
+    text-decoration: none;
+}
