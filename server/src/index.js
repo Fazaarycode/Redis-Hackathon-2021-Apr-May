@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require("express");
 var cookieparser = require("cookie-parser");
 const app = express();
-const { login, registration, logout } = require('./routes/index');
+const { login, registration, logout, totalDatasets } = require('./routes/index');
 const uploader = require('./fileUploader/uploader');
 const autocompleteResults = require('./routes/search/autocompleteResults')
 const request = require('request-promise-native');
@@ -10,7 +10,6 @@ const request = require('request-promise-native');
 app.use(express.json()) // Body-parser
 
 app.use(cookieparser())
-
 
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
@@ -41,6 +40,8 @@ app.use(uploader);
 
 app.use(autocompleteResults);
 
+app.use(totalDatasets);
+
 app.get('/', (req, res) => {
   return res.json('Hello world');
 });
@@ -56,3 +57,12 @@ app.listen(SERVERPORT, async () => {
   });
   console.log('User created for convenience :) ' , res)
 });
+
+// Setup Global error handling so our app continues to run
+process
+    .on('unhandledRejection', (reason, p) => {
+        console.log(`Unhandled Promise Rejection ${reason}`);
+    })
+    .on('uncaughtException', err => {
+      console.log(`Uncaught Exception ${err}`);
+    });

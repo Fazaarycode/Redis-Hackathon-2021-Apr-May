@@ -1,3 +1,6 @@
+body {
+    font-family: 'Nunito', sans-serif;
+}
 header {
     /* margin-top: 50px; */
     text-align: center;
@@ -30,3 +33,16 @@ header {
     transition: 1s all ease;
 }
 
+a {
+    text-decoration: none;
+    color: #603F8B!important;
+}
+
+.welcome-registration-top {
+    display: inline;
+    text-decoration: underline;
+}
+
+.welcome-registration-top:hover {
+    transform: scale(1.3);
+}

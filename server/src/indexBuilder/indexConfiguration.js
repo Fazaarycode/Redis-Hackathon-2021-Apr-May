@@ -23,5 +23,3 @@ module.exports = async (indexName, headers) => {
     })
     return [...initConfig, ...searchIndexes];
 } 
-
-// .replace(/.csv/,'')

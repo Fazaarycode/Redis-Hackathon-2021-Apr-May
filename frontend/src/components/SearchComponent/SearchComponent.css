@@ -74,3 +74,13 @@
 .inputForm {
     margin-left: 25%;
 }
+
+.dataSetParent {
+    display: flex;
+    justify-content: space-around;
+}
+
+.totalDatasets {
+    margin-top: 20px;
+    font-size: 20px;
+}

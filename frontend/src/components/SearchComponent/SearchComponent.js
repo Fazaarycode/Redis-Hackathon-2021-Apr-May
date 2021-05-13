@@ -1,15 +1,16 @@
 import { Form, Accordion, Button, Container, Row, Col } from 'react-bootstrap';
 import './SearchComponent.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import fileUpload from '../../NetworkRequests/UploadFile';
 import InitiateSearch from '../../NetworkRequests/InitiateSearch';
 import Logout from '../../NetworkRequests/Logout';
+import TotalDatasetsCount from '../../NetworkRequests/TotalDatasetsCount';
 import FuzzyPrefixMatchComponents from './FuzzyPrefixMatchComponents';
 import ExactSearchComponent from './ExactSearchComponent';
-const SearchComponent = () => {
 
+const SearchComponent = () => {
     const uploadFile = async () => {
         const formData = new FormData();
         formData.append(
@@ -24,6 +25,16 @@ const SearchComponent = () => {
     const [selectedFile, setSelectedFile] = useState("");
     const [keyString, setKeyString] = useState('');
     const [searchResults, setSearchResults] = useState({});
+    const [totalDatasets, setTotalDataSets] = useState(0);
+    const [datasetNames, setDatasetNames] = useState(0);
+
+
+    useEffect(async () => {
+        const { count, dataSetNames } = await TotalDatasetsCount();
+        setTotalDataSets(count);
+        setDatasetNames(dataSetNames)
+
+    }, [totalDatasets]);
 
     const handleOnChange = async (value) => {
         setSearchResults({});
@@ -57,10 +68,15 @@ const SearchComponent = () => {
                     <Row>
                         <Col>
                             <Accordion defaultActiveKey="1">
-                                <Accordion.Toggle as={Button} eventKey="0">
-                                    Upload Data set
-                    </Accordion.Toggle>
-
+                                <div className="dataSetParent">
+                                    <Accordion.Toggle as={Button} eventKey="0">
+                                        Upload Data set
+                                    </Accordion.Toggle>
+                                    <div className="totalDatasets">
+                                        <p>{`Total Datasets uploaded: ${totalDatasets}`}</p>
+                                        <p>{`${Array.from(datasetNames).join(',')}`}</p> 
+                                    </div>
+                                </div>
                                 <Accordion.Collapse eventKey="0">
                                     <div className="upload-arena">
                                         <p className="upload-text-helper">
@@ -134,7 +150,7 @@ const SearchComponent = () => {
                                     searchType={'fuzzy'}
                                 />
                             </div>
-                            </div>
+                        </div>
                     </Col>
                 </Row>
             </Container>

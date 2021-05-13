@@ -11,29 +11,12 @@ const { verify } = require('../auth/jwt/verifyJWT');
 var express = require('express');
 var router = express.Router();
 var Redis = require('ioredis');
-var fs = require('fs');
 var connection = new Redis(process.env.REDIS_URL);
-var extractedHeaders = require('../../csvParsing/extractHeaders');
+var { listFiles } = require('./listFilesHelper');
 
-
-const listFiles = async () => {
-    let files = [];
-    fs.readdirSync('datasource').forEach(async file => {
-        files.push(file);
-    });
-    let headersPerFile = {};
-    let headers = await Promise.all(files.map(async fileName => {
-        let x = await extractedHeaders(fileName);
-        headersPerFile[fileName] = x;
-        return x;
-    }));
-    return { files, headers, headersPerFile };
-}
-
-const matchingData = async (keyString, fileNameIndex, headers) => {
+const matchingData = async (keyString, fileNameIndex, headers, headersPerFile, index) => {
     let [count, ...foundMatchingKeys] = await connection.call('FT.SEARCH', `${fileNameIndex}:index`, keyString, 'LIMIT', 0, 100);
     let foundKeys = foundMatchingKeys.filter((entry, index) => index % 2 !== 0)
-
     console.log(`Command FT.SEARCH ${fileNameIndex}:index ${keyString}`)
     let allValues = foundKeys.map((eachValues, i) => {
         let keys = eachValues.filter((_, index) => index % 2 === 0)
@@ -46,9 +29,10 @@ const matchingData = async (keyString, fileNameIndex, headers) => {
 
     // We have indexed every column. It is possible that our search results will be found for every one of the indexes for the same row.
     // We only non-duplicated full records.
-    let filteredResults = Object.entries(allValues).filter(([k, v]) => Object.keys(v).length === headers.length);
-    return { count, allValues }
-    // return { count: filteredResults.length, allValues: filteredResults }
+    //  Object.entries(allValues).map(([k, v]) => console.log('V Len',Object.keys(v).length), 'H l ==> ', headers.length);
+    let filteredResults = Object.entries(allValues).filter(([k, v]) => Object.keys(v).length === Object.values(headersPerFile)[index].length);
+    // return { count, allValues }
+    return { count: filteredResults.length, allValues: filteredResults }
 }
 
 const arrayEquals = (a, b) => {
@@ -61,15 +45,16 @@ const arrayEquals = (a, b) => {
 const helper = async (keyString) => {
     try {
         let { files, headers, headersPerFile } = await listFiles();
+        console.log('Files ', files)
         headers = headers.flat();
         let results = {};
         results['prefix'] = {};
         results['fuzzy'] = {};
         results['exactSingleWordMatch'] = {};
         await Promise.all(
-            files.map(async fileName => {
+            files.map(async (fileName, index) => {
                 // Time to get data. 
-                let exactSingleWordMatch = await matchingData(keyString, fileName, headers);
+                let exactSingleWordMatch = await matchingData(keyString, fileName, headers, headersPerFile, index);
                 results['exactSingleWordMatch'][fileName] = [];
                 results['exactSingleWordMatch'][fileName].push(exactSingleWordMatch, { searchType: 'exactSingleWordMatch' });
                 results['prefix'][fileName] = [];
@@ -102,8 +87,6 @@ const helper = async (keyString) => {
         console.log('Error retrieving suggestions. ', error)
     }
 }
-
-// verify
 module.exports = router.get('/auto-complete-results', verify, async (req, res) => {
     try {
         let keyString = req.query.keyString;

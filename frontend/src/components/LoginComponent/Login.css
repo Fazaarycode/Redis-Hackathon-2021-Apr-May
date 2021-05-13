@@ -2,6 +2,7 @@
     position: relative;
     background: #f1ca89;
     height: 100vh;
+    font-family: 'Nunito', sans-serif;
 }
 
 .submit-button {
@@ -10,4 +11,5 @@
 
 .text-info {
     margin-top: 50px;
+    color: #603F8B!important;
 }

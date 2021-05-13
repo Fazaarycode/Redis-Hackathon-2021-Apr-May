@@ -34,7 +34,6 @@ const helper = async (fileName) => {
             })
             .on('end', () => {
                 pipeline.exec();
-                // connection.quit()
               })
     }
     catch (error) {
