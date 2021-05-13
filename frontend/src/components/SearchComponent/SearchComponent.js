@@ -18,7 +18,7 @@ const SearchComponent = () => {
             selectedFile.name,
         );
         let status = await fileUpload(formData);
-        if (status === 200) alert('Uploaded successfully!')
+        if (status === 200) alert('Uploaded successfully!');
     }
 
     const [selectedFile, setSelectedFile] = useState("");
@@ -29,7 +29,6 @@ const SearchComponent = () => {
         setSearchResults({});
         //  We got to make a request... 
         setKeyString(value);
-        // console.log(InitiateSearch(value))
         // Request for possible matches.
         let results = await InitiateSearch(value);
         setSearchResults(results);
@@ -41,17 +40,17 @@ const SearchComponent = () => {
 
     return <div className="searchComponent">
         <div className="header-and-navigations">
-        <div className="go-home">
-            <Button><Link to ='/'>Home </Link></Button>
-        </div>
-        <header>
-            You can add in your dataset or search for a text, across all of your datasets really really quickly.
+            <div className="go-home">
+                <Button><Link to='/'>Home </Link></Button>
+            </div>
+            <header>
+                You can add in your dataset or search for a text, across all of your datasets really really quickly.
         </header>
-        <div className="logout">
-            <Button onClick={(e) => performLogout()}> Logout </Button>
+            <div className="logout">
+                <Button onClick={(e) => performLogout()}> Logout </Button>
+            </div>
         </div>
-        </div>
-        
+
         <div className="search-and-upload">
             <div className="fileUploader">
                 <Container>
@@ -70,7 +69,7 @@ const SearchComponent = () => {
                                         <Form >
                                             <Form.Group >
                                                 <Form.File id="fileUpload"
-                                                    label={selectedFile && selectedFile.name}
+                                                    // label={selectedFile && selectedFile.name}
                                                     className="fileUpload"
                                                     onChange={(e) => setSelectedFile(e.target.files[0])}
                                                 />
@@ -93,9 +92,9 @@ const SearchComponent = () => {
                 <Container>
                     <Row>
                         <Col>
-                            <Form>
+                            <Form className="inputForm">
                                 <Form.Group>
-                                    <Form.Label>Type text...</Form.Label>
+                                    <Form.Label>Search</Form.Label>
                                     <Form.Control
                                         type="text"
                                         name="name"
@@ -104,35 +103,41 @@ const SearchComponent = () => {
                                         placeholder="Search Text"
                                         required
                                     />
-                                 </Form.Group>
+                                </Form.Group>
                             </Form>
                         </Col>
-                     </Row>
+                    </Row>
                 </Container>
             </div>
             {/* Search Results */}
-            <div className="searchResults">
-                <div className="exactMatchComponent">
-                    <ExactSearchComponent
-                        searchResults={searchResults}
-                        keyString={keyString}
-                    />
-                </div>
+            <Container>
+                <Row>
+                    <Col>
+                        <div className="searchResults">
+                            <div className="exactMatchComponent">
+                                <ExactSearchComponent
+                                    searchResults={searchResults}
+                                    keyString={keyString}
+                                />
+                            </div>
 
-                <div className="prefixMatches">
-                    <FuzzyPrefixMatchComponents
-                        searchResults={searchResults}
-                        searchType={'prefix'}
-                    />
-                </div>
+                            <div className="prefixMatches">
+                                <FuzzyPrefixMatchComponents
+                                    searchResults={searchResults}
+                                    searchType={'prefix'}
+                                />
+                            </div>
 
-                <div className="fuzzyMatches">
-                    <FuzzyPrefixMatchComponents
-                        searchResults={searchResults}
-                        searchType={'fuzzy'}
-                    />
-                </div>
-            </div>
+                            <div className="fuzzyMatches">
+                                <FuzzyPrefixMatchComponents
+                                    searchResults={searchResults}
+                                    searchType={'fuzzy'}
+                                />
+                            </div>
+                            </div>
+                    </Col>
+                </Row>
+            </Container>
         </div>
     </div>;
 }

@@ -4,7 +4,6 @@ const destroyJWT = require('./jwt/destroyJWT');
 
 module.exports = router.post('/user-logout', async function (req, res) {
     try {
-        // console.log()
         // Login use case doesn't require us setting us to Redis Cache.
         await destroyJWT(req.cookies.jwt);
         const cookieBaseOptions = { httpOnly: false, secure: false };

@@ -1,4 +1,3 @@
-var express = require('express');
 var Redis = require('ioredis');
 const csv = require('csv-parser')
 const fs = require('fs')
@@ -8,7 +7,7 @@ const extractHeader = require('../../csvParsing/extractHeaders');
 const indexConfiguration = require('../../indexBuilder/indexConfiguration');
 /**
  * This file has an endpoint that is used to add WORD-SUGGESTIONS to Redis using FT.SUGGET command.
- * curl http://localhost:3000/auto-complete-setter
+ * curl http://localhost:4000/auto-complete-setter
  */
 let indexValue = 0;
 const helper = async (fileName) => {
@@ -25,8 +24,6 @@ const helper = async (fileName) => {
                 // Prefix and Fuzzy Search additions
                 await Promise.all(
                     headers.map(async (header, idx) => {
-                        // console.log('setting ', data[header])
-                        // values[header] = [];
                         values[header] = data[header];
                         pipeline.hset(`${fileName}:${indexValue++}`, values);
                         // console.log(`Command pipeline.hset(${fileName}:${indexValue++}, ${values});`)
@@ -48,7 +45,6 @@ const helper = async (fileName) => {
 module.exports = async (fileName) => {
     try {
         // Pass in file name to this request to dynamically pick csv file and iterate that.
-        // READ CSV, EXECUTE FT.SUGADD
         await helper(fileName);
         return { message: 'No errors, auto-completer done.' };
     }

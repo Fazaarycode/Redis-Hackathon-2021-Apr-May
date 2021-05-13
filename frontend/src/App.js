@@ -11,17 +11,8 @@ import Login from './components/LoginComponent/Login';
 import UserRegistrationComponent from './components/UserRegistrationComponent/UserRegistrationComponent';
 import SearchComponent from './components/SearchComponent/SearchComponent';
 
-  let initRequest = () => {
-    console.log(process.env)
-    let init = fetch(`http://localhost:4000/`)
-    .then(response => response.json())
-    .then( data => console.log('Data ', data))
-    ;
-  };
   function App() {
-  
-  initRequest();
-  return (
+    return (
     <div className="App">
       <Router>
             <Switch>

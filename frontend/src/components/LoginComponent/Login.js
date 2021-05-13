@@ -21,7 +21,6 @@ const Login = () => {
         e.preventDefault();
         let payload = { email, password };
         let {userData, status}  = await SignInRequest(payload);
-        console.log('Sstt' , status)
         if(status === 304) alert('Could not find suitable user');
         else {
             setAllowAccess(true);
@@ -36,10 +35,8 @@ const Login = () => {
                 <Container>
                 <Row>
                     <Col>
-                        <h1 className="text-info text-center">Clientw Login</h1>
+                        <h1 className="text-info text-center">Client Login</h1>
                         <hr />
-                        {/* {error && <Alert variant="danger">{error}</Alert>} */}
-                        {/* onSubmit={handleOnSubmit} */}
                         <Form autoComplete="off" onSubmit={handleOnSubmit}>
                             <Form.Group>
                                 <Form.Label>Email Address</Form.Label>

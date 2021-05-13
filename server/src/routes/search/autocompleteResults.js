@@ -61,25 +61,20 @@ const arrayEquals = (a, b) => {
 const helper = async (keyString) => {
     try {
         let { files, headers, headersPerFile } = await listFiles();
-        console.log('headersPerFile', headersPerFile)
         headers = headers.flat();
         let results = {};
         results['prefix'] = {};
         results['fuzzy'] = {};
         results['exactSingleWordMatch'] = {};
-        // console.log('Headers', headers);
         await Promise.all(
             files.map(async fileName => {
                 // Time to get data. 
                 let exactSingleWordMatch = await matchingData(keyString, fileName, headers);
-                // console.log('Exact Matches' , Array.isArray(exactSingleWordMatch));
                 results['exactSingleWordMatch'][fileName] = [];
                 results['exactSingleWordMatch'][fileName].push(exactSingleWordMatch, { searchType: 'exactSingleWordMatch' });
                 results['prefix'][fileName] = [];
                 results['fuzzy'][fileName] = [];
-                // console.log('Records found for prefix match ', prefixMatch)
                 await Promise.all((headersPerFile[fileName] || []).map(async header => {
-                    // console.log('each header', header)
                     let data = await connection.call('FT.SUGGET', header, keyString);
                     let fuzzy = await connection.call('FT.SUGGET', header, keyString, "FUZZY");
                     if (Array.isArray(data)) {

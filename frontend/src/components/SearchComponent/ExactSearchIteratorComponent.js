@@ -43,15 +43,3 @@ const ExactSearchInteratorComponent = ({ eachValue, keyString }) => {
 }
 
 export default ExactSearchInteratorComponent;
-
-
-
-// className={` ${k === keyString 
-//     || 
-//     (!Array.isArray(v) && !Number(v) && v.toLowerCase().includes(props.keyString.toLowerCase()) )
-//     ?
-//     'highlighter'
-//     : 
-//     'normal'    
-// }        
-//     `}

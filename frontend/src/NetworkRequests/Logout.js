@@ -5,7 +5,6 @@ import axios from 'axios';
 
 const Logout = async payload =>  {
     let response = await axios.post(`http://localhost:4000/user-logout`, { payload }, { withCredentials: true });
-    console.log('RES ' , response.data)
     return response;
 };
 

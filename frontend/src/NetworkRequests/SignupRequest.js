@@ -1,7 +1,6 @@
 // Helper to dispatch action to backend.
 
 const SignUpRequest = async payload =>  {
-    // console.log(`URL http://localhost:4000/user-registration/user-registration`)
     let response = await fetch(`http://localhost:4000/user-registration/`, {
         method: 'post',
         headers: {'Content-Type': 'application/json'},
@@ -15,4 +14,3 @@ const SignUpRequest = async payload =>  {
 
 export default SignUpRequest;
 
-// http://localhost:4000/user-registration

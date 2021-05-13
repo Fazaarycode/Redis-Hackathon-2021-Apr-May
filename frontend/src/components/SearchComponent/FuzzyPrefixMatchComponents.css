@@ -4,3 +4,14 @@
 .dataset-heading {
     margin-top: 20px;
 }
+
+.btn, .btn-link * a {
+    text-decoration: none;
+    font-size: 25px;
+    color: black;
+}
+
+.btn:hover, .btn-link:hover {
+    border-bottom: 10px solid orange;
+    color: white;
+}
