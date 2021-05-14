@@ -21,8 +21,6 @@ services:
       - REDIS_URL=redis://cache
       - NODE_ENV=development
       - PORT=4000
-    command:
-      sh -c 'npm i && node server.js'
   frontendreact:
     container_name: reactfrontend
     build: ./frontend

@@ -1,3 +1,4 @@
+// A simple user login  endpoint.
 var express = require('express');
 var router = express.Router();
 const { connectToRedis } = require('../../redisClient/connection');

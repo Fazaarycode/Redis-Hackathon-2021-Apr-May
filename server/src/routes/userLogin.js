@@ -1,3 +1,4 @@
+// Login a user and return JWT
 var express = require('express');
 var router = express.Router();
 const { client } = require('../redisClient/connection');

@@ -1,6 +1,5 @@
 var Redis = require('ioredis');
 var JWTR = require('jwt-redis').default;
-var crypto = require('crypto');
 var client = new Redis(process.env.REDIS_URL);
 var jwtr = new JWTR(client);
 

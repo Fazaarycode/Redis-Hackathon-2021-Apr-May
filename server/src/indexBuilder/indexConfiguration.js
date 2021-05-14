@@ -1,3 +1,4 @@
+// This is a configuration file that consturcts the search index based on the number of columns in our CSV dataset.
 const Redis = require('ioredis');
 let redisClient = new Redis(process.env.REDIS_URL);
 

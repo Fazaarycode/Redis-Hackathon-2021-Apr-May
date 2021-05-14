@@ -2,7 +2,6 @@
  * I believe this should be called on every keystroke.
  * For every string type, runs FT.SUGGET against it. 
  * Decipher the header (key) for the string we check in FT.SUGGET command.
- * For quick escape, return all matching records for all the headers. 
  * Ex:  curl http://localhost:4000/auto-complete-results?keyString=saw
  * Output depends on the data we have indexed.
  */
@@ -34,14 +33,14 @@ const matchingData = async (keyString, fileNameIndex, headers, headersPerFile, i
     // return { count, allValues }
     return { count: filteredResults.length, allValues: filteredResults }
 }
-
+// Check if array of values are same
 const arrayEquals = (a, b) => {
     return Array.isArray(a) &&
         Array.isArray(b) &&
         a.length === b.length &&
         a.every((val, index) => val === b[index]);
 }
-
+// Return payloads, call helper methods, run SUGGET 
 const helper = async (keyString) => {
     try {
         let { files, headers, headersPerFile } = await listFiles();
@@ -86,6 +85,7 @@ const helper = async (keyString) => {
         console.log('Error retrieving suggestions. ', error)
     }
 }
+// GET endpoint behind a middleware
 module.exports = router.get('/auto-complete-results', verify, async (req, res) => {
     try {
         let keyString = req.query.keyString;

@@ -1,3 +1,4 @@
+// User logout endpoint
 var express = require('express');
 var router = express.Router();
 const destroyJWT = require('./jwt/destroyJWT');

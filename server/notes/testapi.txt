@@ -1,13 +1,26 @@
-curl -d '{
-  "userName": "alex.plywood@tuts.com",
-  "password": "secret",
-  "confirmPassword": "secret",
-  "organisation": "google"
-}' -H 'Content-Type: application/json' http://localhost:3000/user-login
+User registration
+curl --location --request POST 'http://localhost:4000/user-registration' \
+--header 'Content-Type: application/json' \
+--data-raw '{"userName":"123","email":"alex.plywood@tuts.com","companyName":"123","password":"123","confirmPassword":"123"}'
 
-curl -d '{
-  "userName": "alex.plywood@tuts.com",
-  "password": "secret",
-  "confirmPassword": "secret",
-  "organisation": "google"
-}' -H 'Content-Type: application/json' http://localhost:3000/user-registration
+
+User login
+
+curl --location --request POST 'http://localhost:4000/user-login' \
+--header 'Content-Type: application/json' \
+--data-raw '{"email":"alex.plywood@tuts.com","password":"123"}
+'
+
+curl --location --request POST 'http://localhost:3000/user-logout' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "userName": "alex.plywood@tuts.com"
+}'
+
+File Upload - Make sure your file exists and adjust the Url.
+
+curl --location --request POST 'http://localhost:4000/upload-csv' \
+--form 'fileUpload=@"~/Fazaary/Desktop/shorterimdb.csv"'
+
+Get KeyStrings Results - Returns Exact, Prefix and Fuzzy based results
+curl --location --request GET 'http://localhost:4000/auto-complete-results?keyString=169

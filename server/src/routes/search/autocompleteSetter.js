@@ -7,7 +7,7 @@ const extractHeader = require('../../csvParsing/extractHeaders');
 const indexConfiguration = require('../../indexBuilder/indexConfiguration');
 /**
  * This file has an endpoint that is used to add WORD-SUGGESTIONS to Redis using FT.SUGGET command.
- * curl http://localhost:4000/auto-complete-setter
+ * 
  */
 let indexValue = 0;
 const helper = async (fileName) => {

@@ -80,6 +80,36 @@ Quick walkaround is start fresh and that is really simple. Just remove the .CSV 
 The reason Keys aren't persisted as vMounts is to provide a fresh feel during Application showcases.
 
 This is a complete implementation from scratch. Hope you like it! 
-If you have any questions, comments, recommendations, jobs, or partnership with Servian, let me know through the email we registered. 
+If you have any questions, comments, recommendations, jobs, or partnership with Servian, let me know through the email we registered.
+
+# Test URLs (Backend only), Make sure you pass your cookies 
+
+* User registration
+curl --location --request POST 'http://localhost:4000/user-registration' \
+--header 'Content-Type: application/json' \
+--data-raw '{"userName":"123","email":"alex.plywood@tuts.com","companyName":"123","password":"123","confirmPassword":"123"}'
+
+
+* User login
+
+curl --location --request POST 'http://localhost:4000/user-login' \
+--header 'Content-Type: application/json' \
+--data-raw '{"email":"alex.plywood@tuts.com","password":"123"}
+'
+* User logout
+curl --location --request POST 'http://localhost:3000/user-logout' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "userName": "alex.plywood@tuts.com"
+}'
+
+* File Upload - Make sure your file exists and adjust the Url. ` Make sure you pass your cookies `
+
+curl --location --request POST 'http://localhost:4000/upload-csv' \
+--form 'fileUpload=@"~/Fazaary/Desktop/shorterimdb.csv"'
+
+* Get KeyStrings Results - Returns Exact, Prefix and Fuzzy based results ` Make sure you pass your cookies `
+curl --location --request GET 'http://localhost:4000/auto-complete-results?keyString=169
+
 # Have a good day, Stay safe.
 

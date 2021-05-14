@@ -1,3 +1,4 @@
+// Sign JWT tokens for incoming requests
 var Redis = require('ioredis');
 var JWTR = require('jwt-redis').default;
 var crypto = require('crypto');
