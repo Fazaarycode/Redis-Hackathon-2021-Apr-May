@@ -7,7 +7,7 @@ Associate Consultant @ Servian
 This is an implementation of RediSearch leveraging Exact Match, Prefix based searching and Fuzzy search features
 
 # Youtube Video Link
-https://www.youtube.com/watch?v=NsWQ_kAiRwE
+https://www.youtube.com/watch?v=nnLRGOMQHgA
 
 # Why do we need this app? 
 A lot of times, we need to search keyWords in our dataset. It is super hard to go through each dataset when we exactly don't remember where they keyWord and data that we search for resides.
@@ -164,9 +164,6 @@ Based on Headers from our uploaded Dataset
 
 Retrieving Fuzzy based results from our Suggestion Dictionary
 ![image](https://user-images.githubusercontent.com/20859772/118284954-a1850e80-b4ee-11eb-87a0-0928085d2399.png)
-
-
-
 
 
 # Have a good day, Stay safe.
