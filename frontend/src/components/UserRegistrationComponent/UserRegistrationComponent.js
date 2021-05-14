@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import {
   Container,
@@ -6,8 +6,6 @@ import {
   Col,
   Form,
   Button,
-  Spinner,
-  Alert,
 } from "react-bootstrap";
 import { Link, Redirect } from 'react-router-dom';
 import './UserRegistrationComponent.css';

@@ -45,7 +45,6 @@ const arrayEquals = (a, b) => {
 const helper = async (keyString) => {
     try {
         let { files, headers, headersPerFile } = await listFiles();
-        console.log('Files ', files)
         headers = headers.flat();
         let results = {};
         results['prefix'] = {};

@@ -6,6 +6,9 @@ Associate Consultant @ Servian
  # What? 
 This is an implementation of RediSearch leveraging Exact Match, Prefix based searching and Fuzzy search features
 
+# Youtube Video Link
+https://www.youtube.com/watch?v=NsWQ_kAiRwE
+
 # Why do we need this app? 
 A lot of times, we need to search keyWords in our dataset. It is super hard to go through each dataset when we exactly don't remember where they keyWord and data that we search for resides.
 
@@ -39,7 +42,7 @@ Once you upload a CSV Dataset, it is then goes through post-processing. This inc
  - Clone the repository
    git clone https://github.com/Fazaarycode/Redis-Hackathon-2021-Apr-May.git
  - Change Directory: cd Redis-Hackathon-2021-Apr-May/
- - *Run* docker-compose up 
+ - *Run* `docker-compose up`
  - Once docker containers have spun up, You should have frontend running on http://localhost:3000/
  - Backend running http://localhost:4000/
  - A user is already created for you.
@@ -65,8 +68,18 @@ Once you upload a CSV Dataset, it is then goes through post-processing. This inc
 * Redis Cache
 * A few npm packages
 
+# Bring down environment
 
-# This is a complete implementation from scratch. Hope you like it! 
-# If you have any questions, comments, recommendations, jobs, or partnership with Servian, let me know through the email we registered. 
+Make sure you are in the project directory.
+Run `docker-compose down`
+
+# Troubleshooting steps
+
+If your server/datasource has CSV datasets files added but you aren't seeing any search results in UI, then what might have happened is the Keys that were created during your previous session must be erased when the container did or you ran `docker-compose down`
+Quick walkaround is start fresh and that is really simple. Just remove the .CSV files inside `server/datasource` directory and refresh your UI and add new dataset, it should work fine. 
+The reason Keys aren't persisted as vMounts is to provide a fresh feel during Application showcases.
+
+This is a complete implementation from scratch. Hope you like it! 
+If you have any questions, comments, recommendations, jobs, or partnership with Servian, let me know through the email we registered. 
 # Have a good day, Stay safe.
 

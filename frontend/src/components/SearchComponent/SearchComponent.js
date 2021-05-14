@@ -12,6 +12,7 @@ import ExactSearchComponent from './ExactSearchComponent';
 
 const SearchComponent = () => {
     const uploadFile = async () => {
+        if (!selectedFile) return;
         const formData = new FormData();
         formData.append(
             "fileUpload",
@@ -20,6 +21,7 @@ const SearchComponent = () => {
         );
         let status = await fileUpload(formData);
         if (status === 200) alert('Uploaded successfully!');
+        await fetchAllDataSetsCount();
     }
 
     const [selectedFile, setSelectedFile] = useState("");
@@ -28,11 +30,13 @@ const SearchComponent = () => {
     const [totalDatasets, setTotalDataSets] = useState(0);
     const [datasetNames, setDatasetNames] = useState(0);
 
-
-    useEffect(async () => {
+    const fetchAllDataSetsCount = async () => {
         const { count, dataSetNames } = await TotalDatasetsCount();
         setTotalDataSets(count);
         setDatasetNames(dataSetNames)
+    }
+    useEffect(async () => {
+        await fetchAllDataSetsCount();
 
     }, [totalDatasets]);
 
@@ -74,7 +78,7 @@ const SearchComponent = () => {
                                     </Accordion.Toggle>
                                     <div className="totalDatasets">
                                         <p>{`Total Datasets uploaded: ${totalDatasets}`}</p>
-                                        <p>{`${Array.from(datasetNames).join(',')}`}</p> 
+                                        <p>{`${Array.from(datasetNames).join(',')}`}</p>
                                     </div>
                                 </div>
                                 <Accordion.Collapse eventKey="0">

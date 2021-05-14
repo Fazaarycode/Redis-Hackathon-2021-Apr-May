@@ -13,6 +13,7 @@
     padding: 20px;
     display: flex;
     flex: 1;
+    border-right: 2px solid grey;
 
 }
 
@@ -37,7 +38,6 @@
 }
 
 .search-arena {
-    width: 60%;
     margin-top: 50px;
 }
 .confirmUpload {
@@ -72,12 +72,13 @@
     
 }
 .inputForm {
-    margin-left: 25%;
+    font-size: 20px;
 }
 
 .dataSetParent {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+
 }
 
 .totalDatasets {
