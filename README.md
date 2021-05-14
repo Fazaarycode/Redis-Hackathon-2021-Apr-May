@@ -24,6 +24,11 @@ You can also keep adding datasets and *non-duplicated* search results will be av
 At the moment, we only support CSV datasets. It is preferred to upload a CSV that has headers.
 
 # How does this app works, Technically?
+
+Architecture
+
+![image](https://user-images.githubusercontent.com/20859772/118287326-fc1f6a00-b4f0-11eb-8ac8-05732da09b00.png)
+
 Once you upload a CSV Dataset, it is then goes through post-processing. This includes 
 
 * You create a new user. - This is stored in Redis Cache. For convenience, A user is created at the time of starting this app to get a head start of this boring process.
@@ -111,5 +116,59 @@ curl --location --request POST 'http://localhost:4000/upload-csv' \
 * Get KeyStrings Results - Returns Exact, Prefix and Fuzzy based results ` Make sure you pass your cookies `
 curl --location --request GET 'http://localhost:4000/auto-complete-results?keyString=169
 
+# Screenshots
+
+Welcome Page
+
+![image](https://user-images.githubusercontent.com/20859772/118283179-b5c80c00-b4ec-11eb-85f5-9d40256bf31b.png)
+
+Client Login
+
+![image](https://user-images.githubusercontent.com/20859772/118283241-c37d9180-b4ec-11eb-9bb2-4a769cbf1d76.png)
+
+
+Search Page Landing
+
+![image](https://user-images.githubusercontent.com/20859772/118283290-d2fcda80-b4ec-11eb-9303-44025bbed4ad.png)
+
+Upload file
+
+![image](https://user-images.githubusercontent.com/20859772/118283366-ea3bc800-b4ec-11eb-8e90-adcbd5f890a9.png)
+
+Search One dataset
+
+![image](https://user-images.githubusercontent.com/20859772/118283635-32f38100-b4ed-11eb-9c1c-2543f3ec7cbc.png)
+
+Redis LookUp
+At this point, we can have a look at our Indexes: They are dynamically added 
+
+Like so: 
+![image](https://user-images.githubusercontent.com/20859772/118284384-fbd19f80-b4ed-11eb-9037-47f626b143ef.png)
+
+Individual records looks like:
+
+![image](https://user-images.githubusercontent.com/20859772/118283801-5f0f0200-b4ed-11eb-82f4-2a56753bee3c.png)
+
+Along side, there resides our JWT token and our user in cache:
+
+JWT: 
+![image](https://user-images.githubusercontent.com/20859772/118284027-9da4bc80-b4ed-11eb-89e4-340da200eb2a.png)
+
+User:
+![image](https://user-images.githubusercontent.com/20859772/118284069-aac1ab80-b4ed-11eb-9ce7-fec4a8bc7e83.png)
+
+Suggestion Dictionary entry: 
+Based on Headers from our uploaded Dataset
+
+![image](https://user-images.githubusercontent.com/20859772/118284795-6e427f80-b4ee-11eb-89d0-9094ffd446d2.png)
+
+Retrieving Fuzzy based results from our Suggestion Dictionary
+![image](https://user-images.githubusercontent.com/20859772/118284954-a1850e80-b4ee-11eb-87a0-0928085d2399.png)
+
+
+
+
+
 # Have a good day, Stay safe.
+
 
