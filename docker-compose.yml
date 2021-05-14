@@ -21,6 +21,7 @@ services:
       - REDIS_URL=redis://cache
       - NODE_ENV=development
       - PORT=4000
+      - MAX_FILE_UPLOAD_SIZE_IN_MBs=50
   frontendreact:
     container_name: reactfrontend
     build: ./frontend

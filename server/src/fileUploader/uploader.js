@@ -25,7 +25,7 @@ module.exports = router.post('/upload-csv', verify, async function (req, res) {
 
         if (err.code == "LIMIT_FILE_SIZE") {
             return res.status(500).send({
-                message: "File size should be less than 50MB",
+                message: `File size should be less than ${process.env.MAX_FILE_UPLOAD_SIZE_IN_MBs}`,
             });
         }
 

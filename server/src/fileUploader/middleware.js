@@ -16,7 +16,7 @@ let storage = multer.diskStorage({
 let upload = multer({
     storage: storage,
     limits: {
-        fileSize: 1024 * 1024 * 50 // 50 MB file cap.
+        fileSize: 1024 * 1024 * process.env.MAX_FILE_UPLOAD_SIZE_IN_MBs // 50 MB file cap.
     },
     fileFilter: (req, file, cb) => {
         // Accept CSV only.
