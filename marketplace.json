@@ -18,8 +18,8 @@
     "app_image_urls": [
         "https://github.com/Fazaarycode/Redis-Hackathon-2021-Apr-May/blob/main/Thumbnail_Picture.png"
     ], // Provide any image urls in an array.
-    "youtube_url": "https://www.youtube.com/watch?v=NsWQ_kAiRwE", //Provide a Youtube link to your app's video
+    "youtube_url": "https://www.youtube.com/watch?v=nnLRGOMQHgA", //Provide a Youtube link to your app's video
     "special_tags": ["Hackathon"], // "Hackathon", "Paid", or any event names.
-    "verticals": ["Healthcare", "Financial", "Retail", "Data"], // Can be: "Healthcare", "Financial", "Tourism", "Retail", "Oil & Gas", "Manufacturing", "Technology","Education", "Construction"  
+    "verticals": ["Productivity","Utility","Fast Data Search Tooling"], // Can be: "Healthcare", "Financial", "Tourism", "Retail", "Oil & Gas", "Manufacturing", "Technology","Education", "Construction"  
     "markdown": "https://raw.githubusercontent.com/Fazaarycode/Redis-Hackathon-2021-Apr-May/main/README.md", // Link to the RAW Markdown.
 }
