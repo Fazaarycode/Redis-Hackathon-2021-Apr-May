@@ -1,7 +1,5 @@
 // Redis client - Establish connection
 const Redis = require("ioredis");
-const client = new Redis('redis://cache:6379');
+const client = new Redis(process.env.REDIS_URL);
 
-module.exports = {
-    client,
-  };
+module.exports = client;

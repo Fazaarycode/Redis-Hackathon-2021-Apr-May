@@ -1,17 +1,17 @@
 User registration
+
 curl --location --request POST 'http://localhost:4000/user-registration' \
 --header 'Content-Type: application/json' \
 --data-raw '{"userName":"123","email":"alex.plywood@tuts.com","companyName":"123","password":"123","confirmPassword":"123"}'
-
 
 User login
 
 curl --location --request POST 'http://localhost:4000/user-login' \
 --header 'Content-Type: application/json' \
---data-raw '{"email":"alex.plywood@tuts.com","password":"123"}
-'
+--data-raw '{"payload": {"email":"user@runtimeterror.com","password":"123"} }'
 
-curl --location --request POST 'http://localhost:3000/user-logout' \
+
+curl --location --request POST 'http://localhost:4000/user-logout' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "userName": "alex.plywood@tuts.com"

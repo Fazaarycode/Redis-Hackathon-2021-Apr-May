@@ -9,8 +9,7 @@
 const { verify } = require('../auth/jwt/verifyJWT');
 var express = require('express');
 var router = express.Router();
-var Redis = require('ioredis');
-var connection = new Redis(process.env.REDIS_URL);
+var connection = require('../../redisClient/connection')
 var { listFiles } = require('./listFilesHelper');
 
 const matchingData = async (keyString, fileNameIndex, headers, headersPerFile, index) => {

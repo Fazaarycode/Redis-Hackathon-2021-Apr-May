@@ -1,7 +1,7 @@
 // Login a user and return JWT
 var express = require('express');
 var router = express.Router();
-const { client } = require('../redisClient/connection');
+const client = require('../redisClient/connection');
 let signJWT = require('./auth/jwt/signJWT')
 
 module.exports =  router.post('/user-login', function (req, res) {

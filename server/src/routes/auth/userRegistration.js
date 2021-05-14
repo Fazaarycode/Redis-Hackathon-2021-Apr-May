@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { connectToRedis } = require('../../redisClient/connection');
+const connectToRedis = require('../../redisClient/connection');
 // User Registration
 module.exports = router.post('/user-registration', function (req, res) {
     try {

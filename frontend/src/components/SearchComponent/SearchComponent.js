@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import fileUpload from '../../NetworkRequests/UploadFile';
 import InitiateSearch from '../../NetworkRequests/InitiateSearch';
+import RefreshRedisKeys from '../../NetworkRequests/RefreshRedisKeys';
 import Logout from '../../NetworkRequests/Logout';
 import TotalDatasetsCount from '../../NetworkRequests/TotalDatasetsCount';
 import FuzzyPrefixMatchComponents from './FuzzyPrefixMatchComponents';
@@ -32,11 +33,15 @@ const SearchComponent = () => {
 
     const fetchAllDataSetsCount = async () => {
         const { count, dataSetNames } = await TotalDatasetsCount();
+        await RefreshRedisKeys();
         setTotalDataSets(count);
         setDatasetNames(dataSetNames)
     }
-    useEffect(async () => {
-        await fetchAllDataSetsCount();
+    useEffect(() => {
+        async function fetchDataSCount() {
+            await fetchAllDataSetsCount();
+        }
+        fetchDataSCount();
 
     }, [totalDatasets]);
 

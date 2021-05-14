@@ -1,7 +1,7 @@
 const Redis = require("ioredis");
 var express = require('express');
 var router = express.Router();
-const { client } = require('../redisClient/connection');
+const client = require('../redisClient/connection');
 // User Registration
 module.exports = router.post('/user-registration', function (req, res) {
     try {

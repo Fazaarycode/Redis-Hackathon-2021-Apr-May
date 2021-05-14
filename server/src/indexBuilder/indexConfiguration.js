@@ -1,7 +1,5 @@
 // This is a configuration file that consturcts the search index based on the number of columns in our CSV dataset.
-const Redis = require('ioredis');
-let redisClient = new Redis(process.env.REDIS_URL);
-
+let redisClient = require('../redisClient/connection');
 // This is a quick way and an assumption based approach to find out columns that store coordinates.
 // @TODO: Must be a better way to achieve this.
 const geoCoordinateLookups = ['latitude', 'longitude', 'coordinates', 'lat', 'long',];

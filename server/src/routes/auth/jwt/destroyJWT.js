@@ -1,7 +1,6 @@
 // Destroy jwt based on jti when `logout` endpoint is invoked.
-var Redis = require('ioredis');
 var JWTR = require('jwt-redis').default;
-var client = new Redis(process.env.REDIS_URL);
+var client = require('../../../redisClient/connection');
 var jwtr = new JWTR(client);
 
 

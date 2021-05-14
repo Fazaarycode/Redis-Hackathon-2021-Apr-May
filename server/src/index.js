@@ -2,11 +2,11 @@ require('dotenv').config()
 const express = require("express");
 var cookieparser = require("cookie-parser");
 const app = express();
-const { login, registration, logout, totalDatasets } = require('./routes/index');
+const { login, registration, logout, totalDatasets, refreshRedisKeys } = require('./routes/index');
 const uploader = require('./fileUploader/uploader');
 const autocompleteResults = require('./routes/search/autocompleteResults')
 const request = require('request-promise-native');
-
+let appVersion = new Date().toISOString();
 app.use(express.json()) // Body-parser
 
 app.use(cookieparser())
@@ -42,8 +42,10 @@ app.use(autocompleteResults);
 
 app.use(totalDatasets);
 
+app.use(refreshRedisKeys);
+
 app.get('/', (req, res) => {
-  return res.json('Hello world');
+  return res.json(`Hello world, App version is:  ${appVersion}`);
 });
 
 const SERVERPORT = process.env.PORT || 4000;
@@ -55,7 +57,7 @@ app.listen(SERVERPORT, async () => {
     body: { "userName": "123", "email": "user@runtimeterror.com", "companyName": "123", "password": "123", "confirmPassword": "123" },
     json: true,
   });
-  console.log('User created for convenience :) ' , res)
+  console.log('User created for convenience :) ' , res);
 });
 
 // Setup Global error handling so our app continues to run

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
     Container,
     Row,
@@ -20,7 +20,7 @@ const Login = () => {
     const handleOnSubmit = async (e) => {
         e.preventDefault();
         let payload = { email, password };
-        let {userData, status}  = await SignInRequest(payload);
+        let {status}  = await SignInRequest(payload);
         if(status === 304) alert('Could not find suitable user');
         else {
             setAllowAccess(true);

@@ -4,5 +4,6 @@ module.exports = {
     registration: require('./userRegistration.js'),
     logout: require('./auth/userLogout'),
     totalDatasets: require('./TotalDatasets'),
+    refreshRedisKeys: require('././auth/RefreshRedisKeysRoute')
 }
 

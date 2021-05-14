@@ -7,11 +7,10 @@ let style = {
     border: 'none'
 }
 const Welcome = () => {
-    return <div className="welcomePage"
-    >
+    return <div className="welcomePage">
         <header>
             <h1> Welcome to RunTimeTerror_ presents fastest Dataset Search</h1>
-            <p> If you have an account, login. Otherwise, <p className="welcome-registration-top"><Link to='/user-registration'>Register</Link></p>, it's free.</p>
+            <div> If you have an account, login. Otherwise, <p className="welcome-registration-top"><Link to='/user-registration'>Register</Link></p>, it's free.</div>
         </header>
         <div className="login-and-register-cards">
             {/* Login Card */}
